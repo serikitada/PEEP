@@ -22,18 +22,10 @@ Supported metrics include:
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project"> ➤ About The Project</a></li>
-    <li><a href="#overview"> ➤ Overview</a></li>
-    <li><a href="#project-files-description"> ➤ Project Files Description</a></li>
+    <li><a href="#introduction"> ➤ Introduction</a></li>
+    <li><a href="#modes"> ➤ Modes</a></li>
+    <li><a href="#installation-guide"> ➤ Installation Guide</a></li>
     <li><a href="#getting-started"> ➤ Getting Started</a></li>
-    <li><a href="#scenario1"> ➤ Scenario 1: Depth First Search </a></li>
-    <li><a href="#scenario2"> ➤ Scenario 2: Breadth First Search </a></li>
-    <li><a href="#scenario3"> ➤ Scenario 3: Uniform Cost Search </a></li>
-    <li><a href="#scenario4"> ➤ Scenario 4: A* search algorithm </a></li>
-    <li><a href="#scenario5"> ➤ Scenario 5: Finding All Corners </a></li>
-    <li><a href="#scenario6"> ➤ Scenario 6: Admissible and Consistent Heuristic </a></li>
-    <li><a href="#scenario7"> ➤ Scenario 7: Eating All Dots </a></li>
-    <li><a href="#scenario8"> ➤ Scenario 8: Suboptimal Search </a></li>
     <li><a href="#references"> ➤ References</a></li>
     <li><a href="#credits"> ➤ Credits</a></li>
   </ol>
@@ -55,18 +47,6 @@ Finds pairs of spacers within optionally user-defined ranges of deletion start a
  ![image](./images/Mode_base_white.png)
   <br /> <br />
 
-### **[Extend mode for varying lengths of deletions](./markdowns/vextend.md)**　<br>
-
-Finds the possible forward/reverse spacers in a range fixed by the user, selects the best one either automatically or manually specified by the user, and searches for reverse/forward spacers recursively extending the deletion lengths by user-defined steps.  <br /> <br />
-  ![image](./images/Mode_vextend_white.png)
- <br />  <br />
-
-### **[Tiling mode for disperse deletions of the same length](./markdowns/sparse.md)**　<br>
-
-**sparse.py** : sparse mode for achieving the same length of deletions but with a certain sparcity (no overlap of different deletions, or some overlap)  <br />
- <br />
-![image](./images/Mode_sparse_white.png)
-<br />
 
 #
 ## Installation guide <br />
