@@ -1,0 +1,18 @@
+Wide target sequence (47)	Prime edited sequence	PBS length	RT length	PBS-RT length	"Tm1
+(PBS)"	"Tm 2
+(target DNA region corresponding to RT template)"	"Tm 3
+(reverse transcribed cDNA and PAM-opposite DNA strand)"	"Tm 4
+(RT template region and reverse transcribed cDNA)"	"deltaTm
+(Tm3-Tm2)"	"GC count_1
+(PBS)"	"GC count_2
+(RT)"	"GC count_3
+(PBS-RT)"	"GC contents_1
+(PBS)"	"GC contents_2
+(RT)"	"GC contents_3
+(PBS-RT)"	"MFE_1
+(pegRNA)"	"MFE_2
+(-spacer)"	"MFE_3
+(RT-PBS-PolyT)"	"MFE_4
+(spacer only)"	"MFE_5
+(Spacer+Scaffold)"	DeepSpCas9 score
+None	None	None	None	None	None	None	None	None	None	None	None	None	None	None	41.17647059	-31.5	-20.0	0.0	-2.6	-19.4	35.936

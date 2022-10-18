@@ -1,0 +1,11 @@
+﻿query_name,query_length,query_error
+RegionA1,50,20
+RegionA2,100,30
+RegionA3,300,30
+RegionA4,500,30
+,800,50
+,1000,
+,5000,
+RegionB1,10000,
+RegionB2,30000,300
+RegionB3,50000,300

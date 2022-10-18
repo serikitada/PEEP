@@ -1,0 +1,1 @@
+Since SoftwareName uses [FlashFry](https://github.com/mckennalab/FlashFry), files need to be pre-processed by  [details](https://github.com/mckennalab/FlashFry/wiki/Index-options) <br> https://github.com/mckennalab/FlashFry#quickstart
