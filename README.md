@@ -2,6 +2,24 @@
  ![image](./images/PEEP_logo_demo.png)
   <br /> <br />
 
+<!-- TABLE OF CONTENTS -->
+<h2 id="table-of-contents"> :book: Table of Contents</h2>
+
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#Introduction"> ➤ Introduction</a></li>
+    <li><a href="#Modes"> ➤ Modes</a></li>
+    <li><a href="#Installation-guide"> ➤ Installation Guide</a></li>
+    <li><a href="#getting-started"> ➤ Getting Started</a></li>
+    <li><a href="#references"> ➤ References</a></li>
+    <li><a href="#credits"> ➤ Credits</a></li>
+  </ol>
+</details>
+
+
+# Introduction <br />
+
 **PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions and insertions, estimating editing efficiencies based on various metrics. <br />
 Currently, supported deletion/insertion methods are as follows.
 1. [**PRIME-Del** (Junhong Choi et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01025-z)
@@ -16,28 +34,11 @@ Supported metrics include:
  <br />
 
 
-<!-- TABLE OF CONTENTS -->
-<h2 id="table-of-contents"> :book: Table of Contents</h2>
-
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#introduction"> ➤ Introduction</a></li>
-    <li><a href="#Modes"> ➤ Modes</a></li>
-    <li><a href="##Installation-guide"> ➤ Installation Guide</a></li>
-    <li><a href="#getting-started"> ➤ Getting Started</a></li>
-    <li><a href="#references"> ➤ References</a></li>
-    <li><a href="#credits"> ➤ Credits</a></li>
-  </ol>
-</details>
-
-
-
 [Modes](#Modes)
 [Installation guide](#Installation-guide)
 
 
-## Modes <br />
+# Modes <br />
 
 Please refer to each link for usage and details.
 
@@ -48,8 +49,8 @@ Finds pairs of spacers within optionally user-defined ranges of deletion start a
   <br /> <br />
 
 
-#
-## Installation guide <br />
+
+# Installation guide <br />
 **System requirements** <br />
 
 **Environmental setting**
