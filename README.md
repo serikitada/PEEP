@@ -23,8 +23,8 @@ Supported metrics include:
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#introduction"> ➤ Introduction</a></li>
-    <li><a href="#modes"> ➤ Modes</a></li>
-    <li><a href="#installation-guide"> ➤ Installation Guide</a></li>
+    <li><a href="#Modes"> ➤ Modes</a></li>
+    <li><a href="##Installation-guide"> ➤ Installation Guide</a></li>
     <li><a href="#getting-started"> ➤ Getting Started</a></li>
     <li><a href="#references"> ➤ References</a></li>
     <li><a href="#credits"> ➤ Credits</a></li>
