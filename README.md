@@ -19,18 +19,24 @@
 
 # Introduction <br />
 
-**PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions and insertions, estimating editing efficiencies based on various metrics. <br />
-Currently, supported deletion/insertion methods are as follows.
+**PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions. 
+It suggests pairs of spacers with high on-target activities and low off-target activities based on various scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
+
+Currently, supported deletion methods are as follows.
 1. [**PRIME-Del** (Junhong Choi et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01025-z)
 2. [**twinPE** (Andrew V. Anzalone et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01133-w)
-[](
-3. [**GRAND** (Jinlin Wang et al., _Nature Methods_, 2022)](https://www.nature.com/articles/s41592-022-01399-1) <br />
-)
+<!-- 3. [**GRAND** (Jinlin Wang et al., _Nature Methods_, 2022)](https://www.nature.com/articles/s41592-022-01399-1) --> <br />
 
-Supported metrics include:
-1. DeepPE
-2. ...
-3. 
+Supported scoring methods and biological metrics include:
+
+**On-target activities**
+1. [**DeepPE** (Hui Kwon Kim et al., _Nature Biotechnology_, 2020)](https://www.nature.com/articles/s41587-020-0677-y)
+2. [**DeepSpCas9** (Hui Kwon Kim et al., _Science Advances_, 2019)](https://www.science.org/doi/full/10.1126/sciadv.aax9249) 
+3. [**CRISPRscan** (Miguel A. Moreno-Mateos et al., _Nature Methods_, 2015)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4589495/) 
+4. [**RuleSet1**(*deprecated) (John G Doench et al., _Nature Biotechnology_, 2014)](https://doi.org/10.1038/nbt.3026)
+
+**Off-target activities**
+1. 
 
  <br />
 
@@ -78,10 +84,10 @@ conda install -c bioconda viennarna=2.4.18
 
 # Acknowledgements
 PEEP owes much of its functionality to the amazing software FlashFry created by Dr.Aaron McKenna and members in the Shendure lab. <br />
-  McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018). https://doi.org/10.1186/s12915-018-0545-0 <br />
-  https://github.com/mckennalab/FlashFry <br />
+    McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018). https://doi.org/10.1186/s12915-018-0545-0 <br />
+    https://github.com/mckennalab/FlashFry <br />
 
 Evaluation of DeepSpCas9 and DeepPE scores are enabled thanks to codes and parameters provided by the following paper. <br />
-  Kim, H.K., Yu, G., Park, J. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat Biotechnol 39, 198–206 (2021). https://doi.org/10.1038/s41587-020-0677-y <br />
+    Kim, H.K., Yu, G., Park, J. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat Biotechnol 39, 198–206 (2021). https://doi.org/10.1038/s41587-020-0677-y <br />
 
 We sincerely thank every other software and its creators we depend on to run PEEP.
