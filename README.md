@@ -36,7 +36,15 @@ Supported scoring methods and biological metrics include:
 4. [**RuleSet1**(*deprecated) (John G Doench et al., _Nature Biotechnology_, 2014)](https://doi.org/10.1038/nbt.3026)
 
 **Off-target activities**
-1. 
+1. [**CFD score** (John G Doench et al., _Nature Biotechnology_, 2016)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4744125/)
+2. [**MIT Specificity score (a.k.a Hsu guide score)** (Patrick D Hsu et al., _Nature Biotechnology_, 2013)](https://pubmed.ncbi.nlm.nih.gov/23873081/)
+3. **Off-target sites with 0~4 mismatches within the built-in/provided reference genome**
+
+**Other biological metrics**
+1. polyT (4 or more consecutive Ts) within spacers
+2. GC contents of spacers, PBSs, and RTTs
+3. (Melting temperatures)
+4. (RNA minimum free energy) 
 
  <br />
 
