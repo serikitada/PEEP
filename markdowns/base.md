@@ -186,8 +186,6 @@ python base.py \
     --pbs_len 11 \
     --rtt_len 30
 ```
-To run this code block, download [the example bedpe file](https://drive.google.com/drive/folders/13gRzckg7S5KKhiy3LE2FfX4PQJ84IVet?usp=sharing) from GoogleDrive in <code>./example_files/Hi-C</code> folder.
-To get chromatin contact value without providing a chromatin contact matrix (using the built-in library), you can just omit <code>--hic_bedpe</code> argument as shown in [the example below](#twinpe-example-command).
 
 ### PRIME-Del example output
 **1. CSV file** <br />
