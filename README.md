@@ -12,7 +12,7 @@
     <li><a href="#Modes-"> ➤ Modes</a></li>
     <li><a href="#Installation-guide"> ➤ Installation Guide</a></li>
     <li><a href="#References"> ➤ References</a></li>
-    <li><a href="#Acknowledgements"> ➤ Credits</a></li>
+    <li><a href="#Acknowledgements"> ➤ Acknowledgements</a></li>
   </ol>
 </details>
 
