@@ -1,5 +1,4 @@
 import functions as fun
-import get_contact_hic
 import argparse
 import pandas as pd
 import json
@@ -19,9 +18,7 @@ def main():
         'pbsl': 11, 
         'rttl': 30,
         'scaf':"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",
-        'twin_rtt': None,
-        'bed_hic': None,
-        'hic_bedpe': None
+        'twin_rtt': None
         }
     
     #loading user-defined pegRNA properties --------------------------
@@ -52,9 +49,6 @@ def main():
     optional.add_argument('-rttl', '--rtt_len', dest = 'rtt_len', type=int, default = defaults['rttl'], help = 'RTT length in nt') 
     optional.add_argument('-scaf', '--scaffold', dest = 'scaf', type=str, default = defaults['scaf'], help = 'Scaffold of the prime editor (PE2 scaffold by default)') 
     optional.add_argument('-twin_rtt', '--twinPE_rtt', dest = 'twin_rtt', type=str, default = defaults['twin_rtt'], help = 'RTT sequence for Twin-PE') 
-
-    optional.add_argument('-bed_hic', '--bed_for_hic', dest = 'bed', type=str, default = defaults['bed_hic'], help = 'bedfile that shows the genomic coordinate of the fasta sequence data supplied by -f/--fasta argument, in relation to the chromatin contact matrix')
-    optional.add_argument('-hic_bedpe', '--hic_bedpe', dest = 'hic_bedpe', type=str, default = defaults['hic_bedpe'], help = 'User-given Hi-C data in bedpe format. When this is not supplied, the built-in library of chromatin contact matrices are used.')
 
     args = parser.parse_args()
 
@@ -158,12 +152,6 @@ def main():
 
     logger.info("Ranking pairs...") 
     pair_ranked = fun.rank_pair(pair, rankby_pair)
-
-    if args.bed is not None:
-        logger.info("Getting chromatin contact values of each deletion start and end site...")
-        if args.hic_bedpe is None: logger.info("---using the built-in library of chromatin contaxt matrix...")
-        else: logger.info("---using the provided chromatin contaxt matrix in bedpe format...")
-        pair_ranked['hic_contact_value'] = get_contact_hic.main(args.bed, pair_ranked, hic_bedpe_arg=args.hic_bedpe)
 
     pair_ranked.to_csv(outdir + "/" + outelement + "_single_SoftwareName.csv",sep=",",index=False)
     logger.info("Output files saved in ./" + outdir)

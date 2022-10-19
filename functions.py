@@ -597,12 +597,12 @@ def pbs_rtt_GCrich_flag(pbs_arg, rtt_arg):
 
 ##################OPTIMIZATION##################
 
-fasta = read_fasta("example_files/sequence/MAPK1.fna")
-seq, seql = get_seq_len(fasta, 20*2)
-design = "PRIME-Del"
-metrics_output, filterby, rankby_each, rankby_pair, metrics_all = validate_metrics("DeepPE DeepSpCas9 CFDscore MITscore mismatch_hit",[["mismatch_hit",0,2],["MITscore",50],["CFDscore",0.8]],"DeepSpCas9 CFDscore", [["DeepPE","product"],["CFDscore","sum"]], design)
-forw_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
-rev_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
+#fasta = read_fasta("example_files/sequence/MAPK1.fna")
+#seq, seql = get_seq_len(fasta, 20*2)
+#design = "PRIME-Del"
+#metrics_output, filterby, rankby_each, rankby_pair, metrics_all = validate_metrics("DeepPE DeepSpCas9 CFDscore MITscore mismatch_hit",[["mismatch_hit",0,2],["MITscore",50],["CFDscore",0.8]],"DeepSpCas9 CFDscore", [["DeepPE","product"],["CFDscore","sum"]])
+#forw_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
+#rev_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
 
 def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,seq_arg,pbs_len_arg,scaf_arg,rtt_len_arg=None,twin_rtt_arg=None):
     default_columns = ["del_start", "del_end","del_length","FWD_spacer","RVS_spacer","FWD_PBS","FWD_PBS_length","RVS_PBS","RVS_PBS_length","FWD_RTT","FWD_RTT_length","RVS_RTT","RVS_RTT_length"]
@@ -686,7 +686,7 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
     return pair
 
 
-make_pair(forw_arg, rev_arg, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
+#make_pair(forw_arg, rev_arg, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
 
 
 
