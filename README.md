@@ -10,7 +10,7 @@
   <ol>
     <li><a href="#Introduction-"> ➤ Introduction</a></li>
     <li><a href="#Modes-"> ➤ Modes</a></li>
-    <li><a href="./markdowns/base.md">     ➤ Usage</a></li>
+        <li><a href="./markdowns/base.md">     ➤ Usage</a></li>
     <li><a href="#Installation-guide"> ➤ Installation Guide</a></li>
     <li><a href="#References"> ➤ References</a></li>
     <li><a href="#Acknowledgements"> ➤ Acknowledgements</a></li>
