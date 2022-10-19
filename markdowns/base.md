@@ -6,21 +6,21 @@ Designs pairs of pegRNAs for a single deletion and ranks them by estimated editi
 <br /> <br />
 
 # 📖 Table of contents
-- [Usage guide](#Usage-guide-)
-  - [Usage](#Usage)
-    - [1. PRIME-Del usage](#1.PRIME-Del-usage-)
-    - [2. twin-PE usage](#2.twinPE-usage-)
-  - [Arguments](#Arguments)
-    - [Required arguments](#Required-arguments)
-    - [Optional arguments](#Optional-arguments)
-- [Examples](#Examples)
-  - [Example input files](#Example-input-files)
-  - [1. PRIME-Del example](#1.PRIME-Del-example)
-    - [PRIME-Del example command](#PRIME-Del-example-command)
-    - [PRIME-Del example output](#PRIME-Del-example-output)
-  - [2. twinPE example](#2.twinPE-example)
-    - [twinPE example command](#twinPE-example-command)
-    - [twinPE example output](#twinPE-example-output)
+- [Usage guide](#-usage-guide)
+  - [Usage](#usage)
+    - [1. PRIME-Del usage](#1prime-del-usage)
+    - [2. twin-PE usage](#2twinpe-usage)
+  - [Arguments](#arguments)
+    - [Required arguments](#required-arguments)
+    - [Optional arguments](#optional-arguments)
+- [Examples](#-example-usage)
+  - [Example input files](#example-input-files-)
+  - [1. PRIME-Del example](#1prime-del-example)
+    - [PRIME-Del example command](#prime-del-example-command)
+    - [PRIME-Del example output](#prime-del-example-output)
+  - [2. twinPE example](#2twinpe-example)
+    - [twinPE example command](#twinpe-example-command)
+    - [twinPE example output](#twinpe-example-output)
 
 
 # 📕 Usage guide
@@ -51,13 +51,11 @@ python base.py \
     --rankby_pair [metrics to rank pairs of pegRNAs/spacers by] {[["DeepPE","product"],["CFDscore","sum"]]} \
     --pbs_len [PBS length] {11} \
     --rtt_len [RTT length] {30} \
-    --scaffold [Scaffold for PE2] {"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc"} \
-    --bed_for_hic [path to the bed file for the FASTA sequence] {None} \
-    --hic_bedpe [path to the bedpe file of chromatin contact matrix] {None}
+    --scaffold [Scaffold for PE2] {"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc"}
 ```
 ❓How to show default behavious
 
-### 2.twinPE usage
+## 2.twinPE usage
 Arguments followed by <code><></code> below indicate that they are required. <br>
 Arguments followed by <code>[]</code> below indicate that they are optional. <br>
 Contents within <code>{}</code> below denotes parameters or default behaviours.
@@ -81,13 +79,12 @@ python base.py \
     --rankby_pair [metrics to rank pairs of pegRNAs/spacers by] {[["DeepPE","product"],["CFDscore","sum"]]} \
     --pbs_len [PBS length] {11} \
     --twinPE_rtt [RTT sequence] {None} \
-    --scaffold [Scaffold for PE2] {"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc"} \
-    --bed_for_hic [path to the bed file for the FASTA sequence] {None} \
-    --hic_bedpe [path to the bedpe file of chromatin contact matrix] {None}
+    --scaffold [Scaffold for PE2] {"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc"}
 ```
-❓How to show default behavious
+❓How to show default behavious <br>
+
 ## Arguments
-### Required arguments 
+## Required arguments 
 🔷 **<code>--fasta</code> or <code>-f</code>** : The path to the input file in FASTA format, that contains the sequence within which deletion is to be induced [(the example FASTA file)](./../example_files/sequence/MAPK1.fna).   <br>
 🔷 **<code>--ref_genome</code> or <code>-ref</code>** : The path to the reference genome file for evaluating off-target activity [(the example reference genome file and its header file)](./../example_files/ref_genome). Users can either  
 - provide their own file that needs to be pre-processed (for details, refer to [ref_genome.md](./ref_genome.md)) <br>
@@ -97,7 +94,7 @@ python base.py \
 **+ when <code>--design</code> is "twinPE"** <br>
 🔷　**<code>--twinPE_rtt</code> or <code>-twin_rtt</code>** : The reverse transcription template for twinPE.  <br>
 
-### Optional arguments
+## Optional arguments
 **Output file name and directory** <br>
 🔷 **<code>--outname</code> or <code>-name</code>** : Name of the output files except filename extensions. When not provided, output filenames will automatically be the name of FASTA file combined with the deletion method. (When FASTA file is named "MAPK1.fna" and the method is "twinPE", file names will be "MAPK1_twinPE" followed by extensions.)  <br>
 🔷 **<code>--outdir</code> or <code>-o</code>** : Path to the output directory. If the given directory already exists, output files will be saved there. If it does not exist, it will be made. When not provided, output directory will automatically be the same as <code>--outname</code>. <br>
@@ -159,16 +156,16 @@ For pair-wise scoring, please choose from: <br>
 🔷 **<code>--twinPE_rtt</code> or <code>-twin_rtt</code>** : The reverse transcription template for twinPE. Only applicable when twinPE is chosen. <br>
 
 
-## 📘 Example Usage
-### Example input files <br>
+# 📘 Example Usage
+## Example input files <br>
 [The example FASTA file](./../example_files/sequence/MAPK1.fna)  <br>
 [The example reference genome file and its header file](./../example_files/ref_genome)  <br>
 [The example bed file](./../example_files/Hi-C/MAPK1.bed)  <br>
 [The example chromatin contact matrix in bedpe format](https://drive.google.com/drive/folders/13gRzckg7S5KKhiy3LE2FfX4PQJ84IVet?usp=sharing)  <br>
 
 
-### 1.PRIME-Del example
-#### PRIME-Del example command
+## 1.PRIME-Del example
+### PRIME-Del example command
 ```bash
 python base.py \
     --fasta example_files/sequence/MAPK1.fna \
@@ -187,12 +184,12 @@ python base.py \
     --rankby_each DeepSpCas9 CFDscore \
     --rankby_pair '[["DeepPE","product"],["CFDscore","sum"]]' \
     --pbs_len 11 \
-    --rtt_len 30 \
+    --rtt_len 30
 ```
 To run this code block, download [the example bedpe file](https://drive.google.com/drive/folders/13gRzckg7S5KKhiy3LE2FfX4PQJ84IVet?usp=sharing) from GoogleDrive in <code>./example_files/Hi-C</code> folder.
 To get chromatin contact value without providing a chromatin contact matrix (using the built-in library), you can just omit <code>--hic_bedpe</code> argument as shown in [the example below](#twinpe-example-command).
 
-#### PRIME-Del example output
+### PRIME-Del example output
 **1. CSV file** <br />
 [Go to the CSV file](../example_files/output_base/MAPK1_PRIME-Del_example_single_SoftwareName.csv)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName_res.png) 
@@ -206,8 +203,8 @@ To get chromatin contact value without providing a chromatin contact matrix (usi
 
 
 
-### 2.TwinPE example
-#### twinPE example command
+## 2.TwinPE example
+### twinPE example command
 
 ```bash
 python base.py \
@@ -226,9 +223,9 @@ python base.py \
     --rankby_each DeepPE CFDscore \
     --rankby_pair '[["DeepPE","product"],["CFDscore","sum"]]' \
     --pbs_len 11 \
-    --twinPE_rtt ATAACTTCGTATAATGTATGCTATACGAAGTTATGGGAT \
+    --twinPE_rtt ATAACTTCGTATAATGTATGCTATACGAAGTTATGGGAT
 ```
-#### twinPE example output
+### twinPE example output
 **1. CSV file** <br />
 [Go to the CSV file](../example_files/output_base/MAPK1_twinPE_single_SoftwareName.csv)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName_res.png) 
