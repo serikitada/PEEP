@@ -20,14 +20,14 @@
 # Introduction <br />
 
 **PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions. 
-It suggests pairs of spacers with high on-target activities and low off-target activities based on various scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
+It suggests pairs of spacers with high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
-🧬Currently, supported **deletion methods** are as follows.
+🧬Currently, **supported deletion methods** are as follows.
 1. [**PRIME-Del** (Junhong Choi et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01025-z)
 2. [**twinPE** (Andrew V. Anzalone et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01133-w)
 <!-- 3. [**GRAND** (Jinlin Wang et al., _Nature Methods_, 2022)](https://www.nature.com/articles/s41592-022-01399-1) --> <br />
 
-📊Supported **scoring methods and biological metrics** include:
+📊**Supported scoring methods and biological metrics** include:
 
 **On-target activities**
 1. [**DeepPE** (Hui Kwon Kim et al., _Nature Biotechnology_, 2020)](https://www.nature.com/articles/s41587-020-0677-y)
@@ -58,15 +58,13 @@ Please refer to the link for the detailed usage.
 
 ### **[Single deletion mode](./markdowns/base.md)**　<br>
 
-Finds pairs of spacers within optionally user-defined ranges of deletion start and/or end site, and/or length. Designs PBS and RTT for PRIME-del and TwinPE when the option is given. <br /> <br />
+Finds pairs of spacers within optionally user-defined ranges of deletion start and/or end site, and/or length. Designs PBS and RTT for PRIME-del and twinPE when the corresponding option is given. <br /> <br />
  ![image](./images/Mode_base_white.png)
   <br /> <br />
 
 
 
 # Installation guide <br />
-
-
 
 **Environmental requirements**
 
