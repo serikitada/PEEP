@@ -6,10 +6,10 @@ Designs pairs of pegRNAs for a single deletion and ranks them by estimated editi
 <br /> <br />
 
 # 📖 Table of contents
-- [Usage guide](#Usage-guide)
+- [Usage guide](#Usage-guide-)
   - [Usage](#Usage)
-    - [1. PRIME-Del usage](#1.PRIME-Del-usage)
-    - [2. twin-PE usage](#2.twinPE-usage)
+    - [1. PRIME-Del usage](#1.PRIME-Del-usage-)
+    - [2. twin-PE usage](#2.twinPE-usage-)
   - [Arguments](#Arguments)
     - [Required arguments](#Required-arguments)
     - [Optional arguments](#Optional-arguments)
@@ -158,10 +158,7 @@ For pair-wise scoring, please choose from: <br>
 🔷 **<code>--rtt_len</code> or <code>-rttl</code>** :  RTT length. 30 by default. Only applicable when PRIME-Del is chosen. <br>
 🔷 **<code>--twinPE_rtt</code> or <code>-twin_rtt</code>** : The reverse transcription template for twinPE. Only applicable when twinPE is chosen. <br>
 
-**Hi-C-related arguments**  <br>
-🔷 **<code>--bed_for_hic</code> or <code>-bed_hic</code>** : The path to a bed file that shows the genomic coordinates of the FASTA sequence data supplied by <code>--fasta/-f</code> argument, in relation to the chromatin contact matrix [(the example bed file)](./../example_files/Hi-C/MAPK1.bed). When this argument is not passed, chromatin contact value will not be calculated or shown in the output. <br>
-🔷 **<code>--bed_for_hic</code> or <code>-bed_hic</code>** : The path to a bedpe file of chromatin contact matrix [(the example chromatin contact matrix in bedpe format)](https://drive.google.com/drive/folders/13gRzckg7S5KKhiy3LE2FfX4PQJ84IVet?usp=sharing). When this argument is not passed, datasets in [the built-in library](../ref_library/Hi-C_reference/) will be used for calculating chromatin contact values. <br>
-❓ Explain about the datasets. Currently the built-in library only contains chr22 on GitHub repository. To calculate values for other chromosomes, please download the rest of datasets from the GoogleDrive in [the built-in library](../ref_library/Hi-C_reference/).
+
 ## 📘 Example Usage
 ### Example input files <br>
 [The example FASTA file](./../example_files/sequence/MAPK1.fna)  <br>
@@ -191,8 +188,6 @@ python base.py \
     --rankby_pair '[["DeepPE","product"],["CFDscore","sum"]]' \
     --pbs_len 11 \
     --rtt_len 30 \
-    --bed_for_hic example_files/Hi-C/MAPK1.bed \
-    --hic_bedpe example_files/Hi-C/chr22.bedpe
 ```
 To run this code block, download [the example bedpe file](https://drive.google.com/drive/folders/13gRzckg7S5KKhiy3LE2FfX4PQJ84IVet?usp=sharing) from GoogleDrive in <code>./example_files/Hi-C</code> folder.
 To get chromatin contact value without providing a chromatin contact matrix (using the built-in library), you can just omit <code>--hic_bedpe</code> argument as shown in [the example below](#twinpe-example-command).
@@ -232,7 +227,6 @@ python base.py \
     --rankby_pair '[["DeepPE","product"],["CFDscore","sum"]]' \
     --pbs_len 11 \
     --twinPE_rtt ATAACTTCGTATAATGTATGCTATACGAAGTTATGGGAT \
-    --bed_for_hic example_files/Hi-C/MAPK1.bed
 ```
 #### twinPE example output
 **1. CSV file** <br />
