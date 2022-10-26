@@ -501,7 +501,6 @@ def score_each(seq_arg, spacers_path_woex_arg,ref_arg,metrics_arg, scaf_arg, pbs
     if ("MITscore" in metrics_arg): flashfry_metrics += ",hsu2013"
     scored_path = flashfry_score(flashfry_metrics, spacers_path_woex_arg, ref_arg)
     scored = pd.read_csv(scored_path, sep="\t")
-    print("until setting paths and metrics")
     if scored.shape[0] != 0 : #== 0 happens when FlashFry "overflow"s - https://github.com/mckennalab/FlashFry/wiki/Discovery-options
         fwd_or_rvs = scored.loc[0, 'orientation']
         if fwd_or_rvs == 'FWD':
@@ -539,9 +538,7 @@ def filter(scored_spacers_matrix_arg, filterby_arg):
             after = passed.shape[0]
             for_log.append(filter+" (mismatch"+str(mismatch_threshold)+" < "+str(hit_threshold)+"): "+str(before-after)+" spacers filtered out for having "+" >= "+str(hit_threshold)+" off-target sites with "+str(mismatch_threshold)+" mismatch(es)")
         else:
-            #print(filter)
             filter_ = correspond.get(filter)
-            #print('filter:',filter_)
             passed = passed[passed.loc[:,filter_].values >= threshold]
             after = passed.shape[0]
             for_log.append(filter + "( >= " + str(threshold) + "): " + str(before-after) + " spacers filtered out for its score being " + " < "+str(threshold))
@@ -671,7 +668,6 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
             for metric in metrics_:
                 metrics_part.append(forw_arg.loc[x,metric])
                 metrics_part.append(rev_arg.loc[y,metric])
-            print("until metrics metrics")
             flags_part = [ polyT_flag(forw_spacer, forw_pbs, forw_rtt),
             polyT_flag(rev_spacer,rev_pbs,rev_rtt),
             spacerGC_flag(forw_spacer, spacerGC_low, spacerGC_high),

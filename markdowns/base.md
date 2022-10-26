@@ -118,7 +118,7 @@ python base.py \
 For details of each metric, refer to [this page](./metrics.md).  <br>
 🔷 **<code>--metrics</code> or <code>-m</code>** : Metrics to be shown in the output. In addition to these metrics, metrics chosen in the following arguments will also be shown in the output. By default, <code>DeepPE</code>,<code>DeepSpCas9</code>,<code>MITscore</code>,<code>CFDscore</code>,and <code>mismatch_hit</code>. <br>
 Please choose from <br>
-**on-target activity metrics**: <code>DeepPE</code> (cannot be chosen with PRIME-Del),<code>DeepSpCas9</code>,<code>CRISPRscan</code>,<code>RuleSet1</code> <br>
+**on-target activity metrics**: <code>DeepPE</code>,<code>DeepSpCas9</code>,<code>CRISPRscan</code>,<code>RuleSet1</code> <br>
 **off-target activity metrics:** <code>MITscore</code>,<code>CFDscore</code>,and <code>mismatch_hit</code>. <br>
 
 
