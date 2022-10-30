@@ -24,7 +24,7 @@ def main():
         }
     
     #loading user-defined pegRNA properties --------------------------
-    parser = argparse.ArgumentParser(description='SoftwareName demo')
+    parser = argparse.ArgumentParser(description='PEEP demo')
     required = parser.add_argument_group('required arguments')
     optional = parser.add_argument_group('optional arguments')  
 
@@ -58,7 +58,7 @@ def main():
     outelement = fun.get_outelement(args.name, '{args.fasta}'.format(args=args), args.design)
     outdir = fun.output_path(args.outdir, outelement)
     tmp_outdir = fun.tmp_output_path(outdir)
-    logger = fun.get_log(outdir+"/"+outelement+"_single_SoftwareName.log", args) #making a log file
+    logger = fun.get_log(outdir+"/"+outelement+"_single_PEEP.log", args) #making a log file
     logger.info("Validating arguments...")
     fasta = fun.read_fasta(r'{args.fasta}'.format(args=args))
     seq, seql = fun.get_seq_len(fasta, spacer_len*2)
@@ -145,8 +145,8 @@ def main():
     ###flag-related columns: ["poly_T_4","SpacerGC_25_75","PBS_GC_30_60","PBS_RTT_GCrich"]
     forw_top = forw_ranked[0:min(forw_ranked.shape[0],top_value)]
     rev_top = rev_ranked[0:min(rev_ranked.shape[0],top_value)]
-    forw_top.to_csv(outdir + "/opt_forw_" + outelement + "_single_SoftwareName.csv",sep=",",index=False)
-    rev_top.to_csv(outdir + "/opt_rev_" + outelement + "_single_SoftwareName.csv",sep=",",index=False)
+    forw_top.to_csv(outdir + "/opt_forw_" + outelement + "_single_PEEP.csv",sep=",",index=False)
+    rev_top.to_csv(outdir + "/opt_rev_" + outelement + "_single_PEEP.csv",sep=",",index=False)
 
     logger.info("Searching for pairs with deletion length in range and assessing them...")
     pair = fun.make_pair(forw_top, rev_top, metrics_all,design,lmin,lmax,seq,pbs_len,scaf, rtt_len_arg=rtt_len,twin_rtt_arg=twin_rtt)
@@ -155,7 +155,7 @@ def main():
     logger.info("Ranking pairs...") 
     pair_ranked = fun.rank_pair(pair, rankby_pair)
 
-    pair_ranked.to_csv(outdir + "/" + outelement + "_single_SoftwareName.csv",sep=",",index=False)
+    pair_ranked.to_csv(outdir + "/" + outelement + "_single_PEEP.csv",sep=",",index=False)
     logger.info("Output files saved in ./" + outdir)
     fun.remove_tmp_outdir(tmp_outdir)
 

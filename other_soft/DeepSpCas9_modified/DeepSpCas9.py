@@ -2,7 +2,7 @@ import os, sys
 import numpy as np
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow as tf
-tf.get_logger().setLevel('WARNING')
+tf.get_logger().setLevel('ERROR')
 
 ## Paths ##
 PACKAGE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))

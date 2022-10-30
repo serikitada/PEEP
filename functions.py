@@ -1,15 +1,17 @@
 import os
 import subprocess
-import logging
 import pandas as pd
 import numpy as np
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import logging
 import other_soft.DeepSpCas9_modified.DeepSpCas9 as DeepSpCas9
 import other_soft.DeepPE_modified.DeepPE_main as DeepPE
 from Bio.Seq import Seq
 #import concurrent.futures
 import itertools
 import multiprocessing as mp
+import tensorflow as tf
+tf.get_logger().setLevel('WARNING')
+tf.logging.set_verbosity(tf.logging.WARNING)
 
 def shell(command_arg, out=False):
     """Runs the given shell command(s). Returns the output if out=True."""
@@ -195,7 +197,7 @@ def output_path(outdir_arg, outelement_arg):
     if outdir_arg is not None: 
         outdir = outdir_arg
     else:
-        outdir = '_'.join([outelement_arg,'SoftwareName','out'])
+        outdir = '_'.join([outelement_arg,'PEEP','out'])
     if os.path.isdir(outdir)==False:
         os.mkdir(outdir)
     return outdir
@@ -250,7 +252,7 @@ def trim_fasta(seq_arg, start_arg, end_arg,tmp_outdir_arg,outelement_arg, add=""
 
 def trim_seq(seq_arg, start_arg, end_arg):
     trimmed_seq = seq_arg[start_arg-1:end_arg]
-    return trimmed_seq 
+    return trimmed_seq
 
 def reverse_complement(seq_arg):
     complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A','a': 't', 'c': 'g', 'g': 'c', 't': 'a'}
@@ -615,58 +617,70 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
     pair = pd.DataFrame(columns = column_names)
     if design_arg == "PRIME-Del":
         if "DeepPE" in metrics_all_arg:
-            forw_arg["DeepPE"] = None
-            rev_arg["DeepPE"] = None
+            forw_arg.loc[:,"DeepPE"] = np.nan
+            rev_arg.loc[:,"DeepPE"] = np.nan
     if design_arg == "twinPE":
         forw_rtt = twin_rtt_arg
         rev_rtt = reverse_complement(twin_rtt_arg)
     ###
-    pool = mp.Pool(mp.cpu_count())
+    #pool = mp.Pool(mp.cpu_count())
     ###
-    for x, y in itertools.product(range(forw_arg.shape[0]), range(rev_arg.shape[0])):
-        size = int(rev_arg.loc[y, 'del_end']) -  int(forw_arg.loc[x, 'del_start']) + 1
-        forw_spacer = forw_arg.loc[x,'target']
-        rev_spacer = rev_arg.loc[y,'target']
+    forw_list = list(np.repeat(range(forw_arg.shape[0]),rev_arg.shape[0]))
+    rev_list = list(range(rev_arg.shape[0]))*forw_arg.shape[0]
+    pair_list = pd.DataFrame(list(zip(forw_list, rev_list)), columns =['forw_list', 'rev_list'])
+    def get_pair_size(forw_index_arg, rev_index_arg):
+        size = int(rev_arg.loc[rev_index_arg, 'del_end']) -  int(forw_arg.loc[forw_index_arg, 'del_start']) + 1
+        return size
+    pair_list['size_list'] = pair_list.apply(lambda x: get_pair_size(x['forw_list'], x['rev_list']), axis=1)
+    pair_bool = (pair_list.loc[:,'size_list'] <= lmax_arg ) & (pair_list.loc[:,'size_list'] >= lmin_arg).values.tolist()
+    pair_list_refined = pair_list.drop(np.where(pair_bool==False)[0].tolist(), axis=0, inplace=False) 
+    ###
+    def get_pair_info(forw_index_arg, rev_index_arg):
+        size = int(rev_arg.loc[rev_index_arg, 'del_end']) -  int(forw_arg.loc[forw_index_arg, 'del_start']) + 1
+        forw_spacer = forw_arg.loc[forw_index_arg,'target']
+        rev_spacer = rev_arg.loc[rev_index_arg,'target']
         ###
         if design_arg == "PRIME-Del":
-            forw_pbs,forw_rtt,rev_pbs,rev_rtt = primedel_both(forw_arg.loc[x,:], rev_arg.loc[y,:], seq_arg, pbs_len_arg,rtt_len_arg)
-            if "DeepPE" in metrics_all_arg: 
-                forw_arg.loc[x,"DeepPE"] = get_DeepPE_primedel_each(seq_arg, forw_arg.loc[x,:],forw_pbs, forw_rtt, scaf_arg)
-                rev_arg.loc[y,"DeepPE"] = get_DeepPE_primedel_each(seq_arg, rev_arg.loc[y,:],rev_pbs, rev_rtt, scaf_arg)
+            forw_pbs,forw_rtt,rev_pbs,rev_rtt = primedel_both(forw_arg.loc[forw_index_arg,:], rev_arg.loc[rev_index_arg,:], seq_arg, pbs_len_arg,rtt_len_arg)
+            if "DeepPE" in metrics_all_arg:
+                forw_arg.loc[forw_index_arg, forw_arg.columns.get_loc("DeepPE")] = get_DeepPE_primedel_each(seq_arg, forw_arg.loc[forw_index_arg,:],forw_pbs, forw_rtt, scaf_arg)
+                rev_arg.loc[rev_index_arg, rev_arg.columns.get_loc("DeepPE")] = get_DeepPE_primedel_each(seq_arg, rev_arg.loc[rev_index_arg,:],rev_pbs, rev_rtt, scaf_arg)
         ###
         if design_arg == "twinPE":
-            forw_pbs = twinpe_forw_each(seq_arg, forw_arg, x)[1]
-            rev_pbs = twinpe_rev_each(seq_arg, rev_arg, y)[1]
+            forw_pbs = twinpe_forw_each(seq_arg, forw_arg, forw_index_arg)[1]
+            rev_pbs = twinpe_rev_each(seq_arg, rev_arg, rev_index_arg)[1]
         ###
-        if (size <= lmax_arg ) & (size >= lmin_arg ):
-            default_part = [ forw_arg.loc[x,'del_start'], 
-            rev_arg.loc[y,'del_end'],
-            size,
-            forw_spacer, 
-            rev_spacer,
-            forw_pbs,
-            len(forw_pbs),
-            rev_pbs,
-            len(rev_pbs),
-            forw_rtt,
-            len(forw_rtt),
-            rev_rtt,
-            len(rev_rtt)]
-            metrics_part = []
-            for metric in metrics_:
-                metrics_part.append(forw_arg.loc[x,metric])
-                metrics_part.append(rev_arg.loc[y,metric])
-            flags_part = [ polyT_flag(forw_spacer, forw_pbs, forw_rtt),
-            polyT_flag(rev_spacer,rev_pbs,rev_rtt),
-            spacerGC_flag(forw_spacer, spacerGC_low, spacerGC_high),
-            spacerGC_flag(rev_spacer, spacerGC_low, spacerGC_high),
-            pbsGC_flag(forw_pbs, pbsGC_low, pbsGC_high),
-            pbsGC_flag(rev_pbs, pbsGC_low, pbsGC_high),
-            pbs_rtt_GCrich_flag(forw_pbs, forw_rtt),
-            pbs_rtt_GCrich_flag(rev_pbs, rev_rtt)]
-            ###
-            pair.loc[pair.shape[0],:] = default_part + metrics_part + flags_part
-        pool.close() 
+        default_part = [ forw_arg.loc[forw_index_arg,'del_start'], 
+        rev_arg.loc[rev_index_arg,'del_end'],
+        size,
+        forw_spacer, 
+        rev_spacer,
+        forw_pbs,
+        len(forw_pbs),
+        rev_pbs,
+        len(rev_pbs),
+        forw_rtt,
+        len(forw_rtt),
+        rev_rtt,
+        len(rev_rtt)]
+        metrics_part = []
+        for metric in metrics_:
+            metrics_part.append(forw_arg.loc[forw_index_arg,metric])
+            metrics_part.append(rev_arg.loc[rev_index_arg,metric])
+        flags_part = [ polyT_flag(forw_spacer, forw_pbs, forw_rtt),
+        polyT_flag(rev_spacer,rev_pbs,rev_rtt),
+        spacerGC_flag(forw_spacer, spacerGC_low, spacerGC_high),
+        spacerGC_flag(rev_spacer, spacerGC_low, spacerGC_high),
+        pbsGC_flag(forw_pbs, pbsGC_low, pbsGC_high),
+        pbsGC_flag(rev_pbs, pbsGC_low, pbsGC_high),
+        pbs_rtt_GCrich_flag(forw_pbs, forw_rtt),
+        pbs_rtt_GCrich_flag(rev_pbs, rev_rtt)]
+        ###
+        pair_info = default_part + metrics_part + flags_part
+        return pair_info
+        ###
+    pair = pair_list_refined.apply(lambda x: get_pair_info(x['forw_list'], x['rev_list']), axis=1)
+    #pool.close() 
     return pair
 
 ##################OPTIMIZATION##################
@@ -675,10 +689,12 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
 #seq, seql = get_seq_len(fasta, 20*2)
 #design = "PRIME-Del"
 #metrics_output, filterby, rankby_each, rankby_pair, metrics_all = validate_metrics("DeepPE DeepSpCas9 CFDscore MITscore mismatch_hit",[["mismatch_hit",0,2],["MITscore",50],["CFDscore",0.8]],"DeepSpCas9 CFDscore", [["DeepPE","product"],["CFDscore","sum"]])
-#forw_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
-#rev_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
+#forw = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
+#rev = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
+#lmin = 23500
+#lmax = 26500
 
-#make_pair(forw_arg, rev_arg, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
+#make_pair(forw, rev, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
 
 
 
