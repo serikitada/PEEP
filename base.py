@@ -5,6 +5,7 @@ import argparse
 import pandas as pd
 import json
 
+
 def main():
     spacer_len = 20
     context_nt = 30

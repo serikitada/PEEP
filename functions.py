@@ -6,12 +6,29 @@ import logging
 import other_soft.DeepSpCas9_modified.DeepSpCas9 as DeepSpCas9
 import other_soft.DeepPE_modified.DeepPE_main as DeepPE
 from Bio.Seq import Seq
-#import concurrent.futures
+import concurrent.futures as confu
+from functools import partial
 import itertools
-import multiprocessing as mp
-import tensorflow as tf
+#import multiprocessing as mp
+  
+#def import_tensorflow():
+#    # Filter tensorflow version warnings
+#    import os
+#    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+#    import warnings
+#    warnings.simplefilter(action='ignore', category=FutureWarning)
+#    warnings.simplefilter(action='ignore', category=Warning)
+#    import tensorflow as tf
+#    tf.get_logger().setLevel('INFO')
+#    tf.autograph.set_verbosity(0)
+#    import logging
+#    tf.get_logger().setLevel(logging.ERROR)
+#    return tf
+
+#tf = import_tensorflow() 
+import tensorflow as tf 
 tf.get_logger().setLevel('WARNING')
-tf.logging.set_verbosity(tf.logging.WARNING)
+
 
 def shell(command_arg, out=False):
     """Runs the given shell command(s). Returns the output if out=True."""
@@ -436,20 +453,25 @@ def twinpe_rev_each(seq_arg, out_arg,i_arg):
     forw_pbs = reverse_complement( trim_seq(seq_arg, del_end + 1, del_end + pbs_len )  )
     return pbs_len,forw_pbs
 
-def get_DeepSpCas9(seq_arg, spacers_matrix_arg):
+def get_DeepSpCas9_process(spacer_index_arg, spacers_matrix_arg, seq_arg):
     NEIGHBOR_LEFT = 4
     NEIGHBOR_RIGHT = 25
+    fwd_or_rvs = spacers_matrix_arg.loc[spacer_index_arg, 'orientation']
+    if fwd_or_rvs == 'FWD':
+        start = spacers_matrix_arg.loc[spacer_index_arg, 'start']
+        seq30 = seq_arg[start-NEIGHBOR_LEFT-1: start+NEIGHBOR_RIGHT] 
+    else:
+        start = spacers_matrix_arg.loc[spacer_index_arg, 'stop']
+        seq30 = reverse_complement(seq_arg[start-NEIGHBOR_RIGHT-1 : start+NEIGHBOR_LEFT])
+    score_each = DeepSpCas9.main(seq30)
+    return score_each
+
+def get_DeepSpCas9(seq_arg, spacers_matrix_arg):
     score = []
-    for spacer in range(spacers_matrix_arg.shape[0]):
-        fwd_or_rvs = spacers_matrix_arg.loc[spacer, 'orientation']
-        if fwd_or_rvs == 'FWD':
-            start = spacers_matrix_arg.loc[spacer, 'start']
-            seq30 = seq_arg[start-NEIGHBOR_LEFT-1: start+NEIGHBOR_RIGHT] 
-        else:
-            start = spacers_matrix_arg.loc[spacer, 'stop']
-            seq30 = reverse_complement(seq_arg[start-NEIGHBOR_RIGHT-1 : start+NEIGHBOR_LEFT])
-        score_each = DeepSpCas9.main(seq30)
-        score.append(score_each)
+    with confu.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+        process_partial = partial(get_DeepSpCas9_process, spacers_matrix_arg=spacers_matrix_arg,seq_arg=seq_arg)
+        for result in executor.map(process_partial, range(spacers_matrix_arg.shape[0]), chunksize=10):
+            score.append(result)
     return score
 
 def get_DeepPE_twin(seq_arg, spacers_matrix_arg, scaf_arg, pbs_len_arg, twin_rtt_arg):
@@ -458,22 +480,25 @@ def get_DeepPE_twin(seq_arg, spacers_matrix_arg, scaf_arg, pbs_len_arg, twin_rtt
     PBS_SPACE = 21
     RTT_SPACE = 26
     score = []
-    rtt = twin_rtt_arg
-    for spacer in range(spacers_matrix_arg.shape[0]):
-        fwd_or_rvs = spacers_matrix_arg.loc[spacer, 'orientation']
+    def process(spacer_index_arg):
+        fwd_or_rvs = spacers_matrix_arg.loc[spacer_index_arg, 'orientation']
         if fwd_or_rvs == 'FWD':
-            start = spacers_matrix_arg.loc[spacer,'start']
+            start = spacers_matrix_arg.loc[spacer_index_arg,'start']
             seq47 = seq_arg[start-NEIGHBOR_LEFT-1 : start+NEIGHBOR_RIGHT] 
-            pbs = twinpe_forw(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer]
+            pbs = twinpe_forw(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer_index_arg]
         else:
-            start = spacers_matrix_arg.loc[spacer,'stop']
+            start = spacers_matrix_arg.loc[spacer_index_arg,'stop']
             seq47 = reverse_complement(seq_arg[start-NEIGHBOR_RIGHT-1 : start+NEIGHBOR_LEFT])
-            pbs = twinpe_rev(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer]
-            rtt = reverse_complement(rtt)
+            pbs = twinpe_rev(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer_index_arg]
+            twin_rtt_arg = reverse_complement(twin_rtt_arg)
         if len(pbs) > PBS_SPACE: pbs = pbs[0:PBS_SPACE]
-        if len(rtt) > RTT_SPACE: rtt = rtt[0:RTT_SPACE]
-        score_each = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs, rtt_arg=rtt, scaf_arg=scaf_arg)
-        score.append(score_each)
+        if len(twin_rtt_arg) > RTT_SPACE: twin_rtt_arg = twin_rtt_arg[0:RTT_SPACE]
+        score_each = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs, rtt_arg=twin_rtt_arg, scaf_arg=scaf_arg)
+        return score_each
+    with confu.ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+        futures = [executor.submit(process, spacer_index) for spacer_index in range(spacers_matrix_arg.shape[0])]
+        for future in confu.as_completed(futures):
+            score.append(future.result())
     return score
 
 def get_DeepPE_primedel_each(seq_arg, spacer_vector_arg,pbs_arg, rtt_arg, scaf_arg):
@@ -481,8 +506,6 @@ def get_DeepPE_primedel_each(seq_arg, spacer_vector_arg,pbs_arg, rtt_arg, scaf_a
     NEIGHBOR_RIGHT = 42
     PBS_SPACE = 21
     RTT_SPACE = 26
-    pbs = pbs_arg
-    rtt = rtt_arg
     fwd_or_rvs =  spacer_vector_arg['orientation']
     if fwd_or_rvs == 'FWD':
         start = spacer_vector_arg['start']
@@ -490,9 +513,9 @@ def get_DeepPE_primedel_each(seq_arg, spacer_vector_arg,pbs_arg, rtt_arg, scaf_a
     else:
         start = spacer_vector_arg['stop']
         seq47 = reverse_complement(seq_arg[start-NEIGHBOR_RIGHT-1 : start+NEIGHBOR_LEFT])
-    if len(pbs) > PBS_SPACE: pbs = pbs[0:PBS_SPACE]
-    if len(rtt) > RTT_SPACE: rtt = rtt[0:RTT_SPACE]
-    score = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs, rtt_arg=rtt, scaf_arg=scaf_arg)
+    if len(pbs_arg) > PBS_SPACE: pbs_arg = pbs_arg[0:PBS_SPACE]
+    if len(rtt_arg) > RTT_SPACE: rtt_arg = rtt_arg[0:RTT_SPACE]
+    score = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs_arg, rtt_arg=rtt_arg, scaf_arg=scaf_arg)
     return score
 
 def score_each(seq_arg, spacers_path_woex_arg,ref_arg,metrics_arg, scaf_arg, pbs_len_arg, design_arg, gap_arg, wminr_arg, rtt_len_arg=None,twin_rtt_arg = None):
@@ -512,8 +535,10 @@ def score_each(seq_arg, spacers_path_woex_arg,ref_arg,metrics_arg, scaf_arg, pbs
         scored['PBS_len'] = pbs_len_arg
         if rtt_len_arg is not None: scored['RTT_len'] = rtt_len_arg
         if twin_rtt_arg is not None: scored['RTT_len'] = len(twin_rtt_arg)
+        print("until here")
         if ("DeepSpCas9" in metrics_arg):
             scored['DeepSpCas9'] = get_DeepSpCas9(seq_arg, scored)
+        print("until here")
         if ("DeepPE" in metrics_arg):
             if design_arg == 'twinPE':
                 scored['DeepPE'] = get_DeepPE_twin(seq_arg, scored, scaf_arg, pbs_len_arg, twin_rtt_arg)
@@ -614,11 +639,13 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         metrics_.append(correspond.get(metric))
     ###
     column_names = default_columns + metrics_columns + flags_columns 
-    pair = pd.DataFrame(columns = column_names)
+
     if design_arg == "PRIME-Del":
         if "DeepPE" in metrics_all_arg:
-            forw_arg.loc[:,"DeepPE"] = np.nan
-            rev_arg.loc[:,"DeepPE"] = np.nan
+            forw_arg = forw_arg.copy()
+            rev_arg = rev_arg.copy()
+            forw_arg.loc[:,'DeepPE'] = np.nan
+            rev_arg.loc[:,'DeepPE'] = np.nan
     if design_arg == "twinPE":
         forw_rtt = twin_rtt_arg
         rev_rtt = reverse_complement(twin_rtt_arg)
@@ -633,9 +660,10 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         return size
     pair_list['size_list'] = pair_list.apply(lambda x: get_pair_size(x['forw_list'], x['rev_list']), axis=1)
     pair_bool = (pair_list.loc[:,'size_list'] <= lmax_arg ) & (pair_list.loc[:,'size_list'] >= lmin_arg).values.tolist()
-    pair_list_refined = pair_list.drop(np.where(pair_bool==False)[0].tolist(), axis=0, inplace=False) 
+    pair_list_refined = pair_list.drop(np.where(pair_bool==False)[0].tolist(), axis=0, inplace=False)
+    pair_list_refined = pair_list_refined.reset_index(drop=True)
     ###
-    def get_pair_info(forw_index_arg, rev_index_arg):
+    def get_pair_info(forw_index_arg, rev_index_arg, forw_rtt_arg=None, rev_rtt_arg=None):
         size = int(rev_arg.loc[rev_index_arg, 'del_end']) -  int(forw_arg.loc[forw_index_arg, 'del_start']) + 1
         forw_spacer = forw_arg.loc[forw_index_arg,'target']
         rev_spacer = rev_arg.loc[rev_index_arg,'target']
@@ -649,6 +677,8 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         if design_arg == "twinPE":
             forw_pbs = twinpe_forw_each(seq_arg, forw_arg, forw_index_arg)[1]
             rev_pbs = twinpe_rev_each(seq_arg, rev_arg, rev_index_arg)[1]
+            forw_rtt = forw_rtt_arg
+            rev_rtt = rev_rtt_arg
         ###
         default_part = [ forw_arg.loc[forw_index_arg,'del_start'], 
         rev_arg.loc[rev_index_arg,'del_end'],
@@ -679,8 +709,15 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         pair_info = default_part + metrics_part + flags_part
         return pair_info
         ###
-    pair = pair_list_refined.apply(lambda x: get_pair_info(x['forw_list'], x['rev_list']), axis=1)
+    if design_arg == "PRIME-Del":
+        pair = pair_list_refined.apply(lambda x: get_pair_info(x['forw_list'], x['rev_list']), axis=1)
+    if design_arg == "twinPE":
+        pair = pair_list_refined.apply(lambda x: get_pair_info(x['forw_list'], x['rev_list'],forw_rtt_arg=forw_rtt,rev_rtt_arg=rev_rtt), axis=1)
     #pool.close() 
+    print("column_names:", column_names)
+    pair.columns = column_names
+    print(pair)
+    print("pair_names:",pair.columns)
     return pair
 
 ##################OPTIMIZATION##################
@@ -701,14 +738,23 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
 def rank_pair(passed_pairs_matrix_arg, rankby_pair_arg):
     DEF_COLUMN_NUM = 13 # the number of default columns in make_pair() function above
     passed = passed_pairs_matrix_arg
+    print("passed",passed)
     rankby_pair = []
     passed_added = passed
     for metric in range(len(rankby_pair_arg)):
         m1 = rankby_pair_arg[metric][0]
         m2 = rankby_pair_arg[metric][1]
         col_name = "PAIR_"+m2+"_"+m1
+        print(metric)
+        print(m1)
+        print(m2)
         fwd = passed.loc[:,"FWD_"+m1]
         rvs = passed.loc[:,"RVS_"+m1]
+        print(list(fwd+rvs))
+        print(fwd)
+        print(rvs)
+        print(fwd*rvs)
+        print(list(np.minimm(fwd,rvs)))
         if m2=="sum": pmetric = pd.DataFrame({col_name: list(fwd+rvs)})
         if m2=="product":pmetric = pd.DataFrame({col_name: list(fwd*rvs)})
         if m2=="min":pmetric = pd.DataFrame({col_name: list(np.minimm(fwd,rvs))})
