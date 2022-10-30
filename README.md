@@ -76,7 +76,7 @@ Finds pairs of spacers within optionally user-defined ranges of deletion start a
 Please [install Java](https://java.com/en/download/help/index_installing.html) if you have not done so.
 
 We recommend that you create a conda environment specifically for running PEEP to control versions of packages PEEP depends on.
-Please [install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) if you have not done so.
+Please [install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html), which is a package, dependency, and environment manager, if you have not done so.
 ```
 conda create --name PEEP python=3.8
 conda activate PEEP
