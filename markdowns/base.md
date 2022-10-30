@@ -160,8 +160,6 @@ For pair-wise scoring, please choose from: <br>
 ## Example input files <br>
 [The example FASTA file](./../example_files/sequence/MAPK1.fna)  <br>
 [The example reference genome file and its header file](./../example_files/ref_genome)  <br>
-[The example bed file](./../example_files/Hi-C/MAPK1.bed)  <br>
-[The example chromatin contact matrix in bedpe format](https://drive.google.com/drive/folders/13gRzckg7S5KKhiy3LE2FfX4PQJ84IVet?usp=sharing)  <br>
 
 
 ## 1.PRIME-Del example
