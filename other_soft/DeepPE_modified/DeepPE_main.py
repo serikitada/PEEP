@@ -3,6 +3,7 @@ from Bio.Seq import Seq
 import RNA
 import numpy as np
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import sys
 PACKAGE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(PACKAGE_DIRECTORY)
