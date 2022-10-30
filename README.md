@@ -86,7 +86,7 @@ conda install numpy=1.22.3
 conda install pandas=1.4.1
 
 #for DeepPE metric
-conda install -c conda-forge tensorflow=2.8.0
+conda install -c conda-forge tensorflow=2.4.1
 conda install -c conda-forge biopython=1.74
 conda install -c bioconda viennarna=2.4.18
 ```
