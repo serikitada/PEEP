@@ -1,17 +1,11 @@
 import os, sys
 from os import system
-#import tensorflow as tf
+import tensorflow as tf
 import warnings
 warnings.filterwarnings('ignore')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 import numpy as np
 from numpy import *
-#from XlsxWriter import xlsxwriter
-# import pyexcel as pe
-# from random import shuffle
 ##############################################################################
 
 ##############################################################################
@@ -35,19 +29,19 @@ class Model(object):
     def __init__(self, filter_size, filter_num, length, node_1 = 80, node_2 = 60, l_rate = 0.005, bio_num = 20):
         L_filter_num = 4
         bio_num = 20
-        self.inputs         = tf.placeholder(tf.float32, [None, 1, length, L_filter_num])
-        self.mod_inputs     = tf.placeholder(tf.float32, [None, 1, length, L_filter_num])
-        self.bios           = tf.placeholder(tf.float32, [None, bio_num])
-        self.targets        = tf.placeholder(tf.float32, [None, 1])
-        self.is_training    = tf.placeholder(tf.bool)
+        self.inputs         = tf.compat.v1.placeholder(tf.float32, [None, 1, length, L_filter_num])
+        self.mod_inputs     = tf.compat.v1.placeholder(tf.float32, [None, 1, length, L_filter_num])
+        self.bios           = tf.compat.v1.placeholder(tf.float32, [None, bio_num])
+        self.targets        = tf.compat.v1.placeholder(tf.float32, [None, 1])
+        self.is_training    = tf.compat.v1.placeholder(tf.bool)
         
         def create_new_conv_layer(input_data, num_input_channels, num_filters, filter_shape, stride_shape, name):
             conv_filt_shape = [filter_shape[0], filter_shape[1], num_input_channels, num_filters]
-            weights   = tf.Variable(tf.truncated_normal(conv_filt_shape, stddev=0.03),name=name+'_W')
-            bias      = tf.Variable(tf.truncated_normal([num_filters]), name=name+'_b')
+            weights   = tf.Variable(tf.compat.v1.truncated_normal(conv_filt_shape, stddev=0.03),name=name+'_W')
+            bias      = tf.Variable(tf.compat.v1.truncated_normal([num_filters]), name=name+'_b')
             out_layer = tf.nn.conv2d(input_data, weights, [1, stride_shape[0], stride_shape[1], 1], padding='VALID')
             out_layer += bias
-            out_layer = tf.layers.dropout(tf.nn.relu(out_layer), 0.3, self.is_training)
+            out_layer = tf.compat.v1.layers.dropout(tf.nn.relu(out_layer), 0.3, self.is_training)
             return out_layer
             
         stride = 1
@@ -61,17 +55,17 @@ class Model(object):
         L_flatten_mod_pe  = tf.reshape(L_mod_pe, [-1, node_num_0])
         L_flatten = tf.concat([L_flatten_pe, L_flatten_mod_pe, self.bios], 1, name='concat')
         
-        with tf.variable_scope('Fully_Connected_Layer1'):
-            W_fcl1       = tf.get_variable("W_fcl1", shape=[node_num_0*2+bio_num, node_1])
-            B_fcl1       = tf.get_variable("B_fcl1", shape=[node_1])
+        with tf.compat.v1.variable_scope('Fully_Connected_Layer1'):
+            W_fcl1       = tf.compat.v1.get_variable("W_fcl1", shape=[node_num_0*2+bio_num, node_1])
+            B_fcl1       = tf.compat.v1.get_variable("B_fcl1", shape=[node_1])
             L_fcl1_pre   = tf.nn.bias_add(tf.matmul(L_flatten, W_fcl1), B_fcl1)
             L_fcl1       = tf.nn.relu(L_fcl1_pre)
-            L_fcl1_drop  = tf.layers.dropout(L_fcl1, 0.3, self.is_training)
+            L_fcl1_drop  = tf.compat.v1.layers.dropout(L_fcl1, 0.3, self.is_training)
             
         if node_2 != 0:
-            with tf.variable_scope('Fully_Connected_Layer2'):
-                W_fcl2       = tf.get_variable("W_fcl2", shape=[node_1, node_2])
-                B_fcl2       = tf.get_variable("B_fcl2", shape=[node_2])
+            with tf.compat.v1.variable_scope('Fully_Connected_Layer2'):
+                W_fcl2       = tf.compat.v1.get_variable("W_fcl2", shape=[node_1, node_2])
+                B_fcl2       = tf.compat.v1.get_variable("B_fcl2", shape=[node_2])
                 L_fcl2_pre   = tf.nn.bias_add(tf.matmul(L_fcl1_drop, W_fcl2), B_fcl2)
                 L_fcl2       = tf.nn.relu(L_fcl2_pre)
                 L_fcl2_drop  = tf.layers.dropout(L_fcl2, 0.3, self.is_training)
@@ -80,12 +74,12 @@ class Model(object):
                 B_out        = tf.get_variable("B_out", shape=[1])
                 self.outputs = tf.nn.bias_add(tf.matmul(L_fcl2_drop, W_out), B_out)        
         else:
-            with tf.variable_scope('Output_Layer'):
-                W_out        = tf.get_variable("W_out", shape=[node_1, 1])
-                B_out        = tf.get_variable("B_out", shape=[1])
+            with tf.compat.v1.variable_scope('Output_Layer'):
+                W_out        = tf.compat.v1.get_variable("W_out", shape=[node_1, 1])
+                B_out        = tf.compat.v1.get_variable("B_out", shape=[1])
                 self.outputs = tf.nn.bias_add(tf.matmul(L_fcl1_drop, W_out), B_out)       
         self.obj_loss    = tf.reduce_mean(tf.square(self.targets - self.outputs))
-        self.optimizer   = tf.train.AdamOptimizer(l_rate).minimize(self.obj_loss)
+        self.optimizer   = tf.compat.v1.train.AdamOptimizer(l_rate).minimize(self.obj_loss)
 
 def preprocess_seq(data):
     #print("Start preprocessing the sequence done 2d")
@@ -144,7 +138,7 @@ def Model_Inference(sess, TEST_X, model, TEST_mod_X=None, TEST_bio=None):
 
 def main(wide_arg, edit_arg, pbs_len_arg, rtt_len_arg, pbs_rtt_len_arg, Tm1_arg, Tm2_arg, Tm3_arg,Tm4_arg,deltaTm_arg,GCcount1_arg,GCcount2_arg,GCcount3_arg,GCcontent1_arg, GCcontent2_arg,GCcontent3_arg,mfe_1_arg, mfe_2_arg,mfe_3_arg, mfe_4_arg,mfe_5_arg, deep_sp_cas9_arg):
     #TensorFlow config
-    conf                                = tf.ConfigProto()
+    conf                                = tf.compat.v1.ConfigProto()
     conf.gpu_options.allow_growth       = True
     os.environ['CUDA_VISIBLE_DEVICES']  = '0'
     best_model_cv                       = 0.0
@@ -191,11 +185,11 @@ def main(wide_arg, edit_arg, pbs_len_arg, rtt_len_arg, pbs_rtt_len_arg, Tm1_arg,
         filter_num  = [filter_num_1, filter_num_2, filter_num_3]
         args = [filter_size, filter_num, l_rate, 0, None, node_1]
         # Loading the model with the best validation score and test
-        tf.reset_default_graph()
-        with tf.Session(config=conf) as sess:
-            sess.run(tf.global_variables_initializer())
+        tf.compat.v1.reset_default_graph()
+        with tf.compat.v1.Session(config=conf) as sess:
+            sess.run(tf.compat.v1.global_variables_initializer())
             model = Model(filter_size, filter_num, length, node_1, 0, args[2])
-            saver = tf.train.Saver()
+            saver = tf.compat.v1.train.Saver()
             saver.restore(sess, best_model_path+"/PreTrain-Final-{}-{}-{}-{}-{}-{}-{}-{}-{}".format(args[0][0], args[0][1], args[0][2], args[1][0], args[1][1], args[1][2], args[2], load_episode, args[5]))
             result = Model_Inference(sess, TEST_X[0], model, TEST_mod_X=TEST_mod_X[0], TEST_bio=TEST_bio[0])[0]
             #testbook.close()

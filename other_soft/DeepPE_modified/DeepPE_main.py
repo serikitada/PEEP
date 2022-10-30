@@ -1,10 +1,10 @@
-import argparse
+import warnings
+warnings.filterwarnings('ignore')
 from Bio.SeqUtils import MeltingTemp as mt
 from Bio.Seq import Seq
 import RNA
 import numpy as np
 import pandas as pd
-import re
 import os
 import sys
 PACKAGE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
@@ -149,7 +149,7 @@ def main(seq47_arg=None, pbs_arg=None, rtt_arg=None, scaf_arg="gttttagagctagaaat
     score = DeepPE_model.main(wide, edit, pbs_len, rtt_len, pbs_rtt_len, round(Tm1,4),round(Tm2,4),round(Tm3,4),round(Tm4,4),round(deltaTm,4),GCcount1,GCcount2,GCcount3,round(GCcontent1,8),round(GCcontent2,8),round(GCcontent3,8),round(mfe_1,1), round(mfe_2,1),round(mfe_3,1),round(mfe_4,1),round(mfe_5,1),round(deep_sp_cas9,3))
     #print(score)
     #print(wide, edit, pbs_len, rtt_len, pbs_rtt_len, round(Tm1,4),round(Tm2,4),round(Tm3,4),round(Tm4,4),round(deltaTm,4),GCcount1,GCcount2,GCcount3,round(GCcontent1,8),round(GCcontent2,8),round(GCcontent3,8),round(mfe_1,1), round(mfe_2,1),round(mfe_3,1),round(mfe_4,1),round(mfe_5,1),round(deep_sp_cas9,3))
-    return score
+    print(score)
 
     
 
