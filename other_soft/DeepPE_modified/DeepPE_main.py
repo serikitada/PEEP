@@ -1,10 +1,7 @@
-import warnings
-warnings.filterwarnings('ignore')
 from Bio.SeqUtils import MeltingTemp as mt
 from Bio.Seq import Seq
 import RNA
 import numpy as np
-import pandas as pd
 import os
 import sys
 PACKAGE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))

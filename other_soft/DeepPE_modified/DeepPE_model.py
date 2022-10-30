@@ -1,9 +1,6 @@
 import os, sys
-from os import system
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 import tensorflow as tf
-import warnings
-warnings.filterwarnings('ignore')
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 from numpy import *
 ##############################################################################

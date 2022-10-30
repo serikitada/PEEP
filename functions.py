@@ -139,7 +139,6 @@ def narrow_search_range(seql_arg, sminr_arg, smaxr_arg, eminr_arg, emaxr_arg, lm
         eminr = sminr_arg
     if (smaxr_arg > emaxr_arg):
         smaxr = emaxr_arg
-
     return sminr, smaxr, eminr, emaxr, lmin, lmax
 
 def forw_in_range(matrix_arg, sminr_arg, smin_arg,  smax_arg, gap_arg):
@@ -520,7 +519,6 @@ def score_each(seq_arg, spacers_path_woex_arg,ref_arg,metrics_arg, scaf_arg, pbs
 def filter(scored_spacers_matrix_arg, filterby_arg):
     correspond = {"DeepPE":"DeepPE","DeepSpCas9":"DeepSpCas9","CRISPRscan":"Moreno2015","RuleSet1":"Doench2014OnTarget","CFDscore":"DoenchCFD_specificityscore","MITscore":"Hsu2013"}
     passed = scored_spacers_matrix_arg
-
     n_filter = len(filterby_arg)
     for_log = []
     for n in range(n_filter):
@@ -591,16 +589,6 @@ def pbs_rtt_GCrich_flag(pbs_arg, rtt_arg):
             flag = "FLAG"
     return flag
 
-
-##################OPTIMIZATION##################
-
-#fasta = read_fasta("example_files/sequence/MAPK1.fna")
-#seq, seql = get_seq_len(fasta, 20*2)
-#design = "PRIME-Del"
-#metrics_output, filterby, rankby_each, rankby_pair, metrics_all = validate_metrics("DeepPE DeepSpCas9 CFDscore MITscore mismatch_hit",[["mismatch_hit",0,2],["MITscore",50],["CFDscore",0.8]],"DeepSpCas9 CFDscore", [["DeepPE","product"],["CFDscore","sum"]])
-#forw_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
-#rev_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
-
 def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,seq_arg,pbs_len_arg,scaf_arg,rtt_len_arg=None,twin_rtt_arg=None):
     default_columns = ["del_start", "del_end","del_length","FWD_spacer","RVS_spacer","FWD_PBS","FWD_PBS_length","RVS_PBS","RVS_PBS_length","FWD_RTT","FWD_RTT_length","RVS_RTT","RVS_RTT_length"]
     flags_columns_raw = ["poly_T_4","SpacerGC_25_75","PBS_GC_30_60","PBS_RTT_GCrich"]
@@ -613,7 +601,7 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         flags_columns.append(str("FWD_"+flag))
         flags_columns.append(str("RVS_"+flag))
     correspond = {"DeepPE":"DeepPE","DeepSpCas9":"DeepSpCas9","CRISPRscan":"Moreno2015","RuleSet1":"Doench2014OnTarget","CFDscore":"DoenchCFD_specificityscore","MITscore":"Hsu2013","mismatch_hit":"0-1-2-3-4_mismatch"}
-
+    ###
     metrics_columns_raw = metrics_all_arg
     metrics_columns = []
     metrics_ = []
@@ -621,7 +609,7 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         metrics_columns.append(str("FWD_"+metric))
         metrics_columns.append(str("RVS_"+ metric))
         metrics_.append(correspond.get(metric))
-
+    ###
     column_names = default_columns + metrics_columns + flags_columns 
     pair = pd.DataFrame(columns = column_names)
     if design_arg == "PRIME-Del":
@@ -631,25 +619,24 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
     if design_arg == "twinPE":
         forw_rtt = twin_rtt_arg
         rev_rtt = reverse_complement(twin_rtt_arg)
-
+    ###
     pool = mp.Pool(mp.cpu_count())
-
-    
+    ###
     for x, y in itertools.product(range(forw_arg.shape[0]), range(rev_arg.shape[0])):
         size = int(rev_arg.loc[y, 'del_end']) -  int(forw_arg.loc[x, 'del_start']) + 1
         forw_spacer = forw_arg.loc[x,'target']
         rev_spacer = rev_arg.loc[y,'target']
-        
+        ###
         if design_arg == "PRIME-Del":
             forw_pbs,forw_rtt,rev_pbs,rev_rtt = primedel_both(forw_arg.loc[x,:], rev_arg.loc[y,:], seq_arg, pbs_len_arg,rtt_len_arg)
             if "DeepPE" in metrics_all_arg: 
                 forw_arg.loc[x,"DeepPE"] = get_DeepPE_primedel_each(seq_arg, forw_arg.loc[x,:],forw_pbs, forw_rtt, scaf_arg)
                 rev_arg.loc[y,"DeepPE"] = get_DeepPE_primedel_each(seq_arg, rev_arg.loc[y,:],rev_pbs, rev_rtt, scaf_arg)
-        
+        ###
         if design_arg == "twinPE":
             forw_pbs = twinpe_forw_each(seq_arg, forw_arg, x)[1]
             rev_pbs = twinpe_rev_each(seq_arg, rev_arg, y)[1]
-        
+        ###
         if (size <= lmax_arg ) & (size >= lmin_arg ):
             default_part = [ forw_arg.loc[x,'del_start'], 
             rev_arg.loc[y,'del_end'],
@@ -676,13 +663,21 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
             pbsGC_flag(rev_pbs, pbsGC_low, pbsGC_high),
             pbs_rtt_GCrich_flag(forw_pbs, forw_rtt),
             pbs_rtt_GCrich_flag(rev_pbs, rev_rtt)]
-
+            ###
             pair.loc[pair.shape[0],:] = default_part + metrics_part + flags_part
         pool.close() 
     return pair
 
+##################OPTIMIZATION##################
 
-#make_pair(forw_arg, rev_arg, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
+fasta = read_fasta("example_files/sequence/MAPK1.fna")
+seq, seql = get_seq_len(fasta, 20*2)
+design = "PRIME-Del"
+metrics_output, filterby, rankby_each, rankby_pair, metrics_all = validate_metrics("DeepPE DeepSpCas9 CFDscore MITscore mismatch_hit",[["mismatch_hit",0,2],["MITscore",50],["CFDscore",0.8]],"DeepSpCas9 CFDscore", [["DeepPE","product"],["CFDscore","sum"]])
+forw_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
+rev_arg = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
+
+make_pair(forw_arg, rev_arg, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
 
 
 
