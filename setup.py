@@ -15,13 +15,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ],
-    python_requires='>=3.8',
-    install_requires=[
-	'numpy'==1.22.3,
-	'pandas'==1.4.1,
-	'tensorflow'==2.8.0,
-	'biopython'==1.74,
-	'viennarna'
     ]
 )
