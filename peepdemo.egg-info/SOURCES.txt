@@ -1,0 +1,6 @@
+README.md
+setup.py
+peepdemo.egg-info/PKG-INFO
+peepdemo.egg-info/SOURCES.txt
+peepdemo.egg-info/dependency_links.txt
+peepdemo.egg-info/top_level.txt

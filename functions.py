@@ -467,29 +467,31 @@ def get_DeepSpCas9(seq_arg, spacers_matrix_arg):
             score.append(result)
     return score
 
-def get_DeepPE_twin(seq_arg, spacers_matrix_arg, scaf_arg, pbs_len_arg, twin_rtt_arg):
+def get_DeepPE_twin_process(spacer_index_arg, spacers_matrix_arg, seq_arg, pbs_len_arg, scaf_arg, twin_rtt_arg):
     NEIGHBOR_LEFT = 4
     NEIGHBOR_RIGHT = 42
     PBS_SPACE = 21
     RTT_SPACE = 26
+    fwd_or_rvs = spacers_matrix_arg.loc[spacer_index_arg, 'orientation']
+    if fwd_or_rvs == 'FWD':
+        start = spacers_matrix_arg.loc[spacer_index_arg,'start']
+        seq47 = seq_arg[start-NEIGHBOR_LEFT-1 : start+NEIGHBOR_RIGHT] 
+        pbs = twinpe_forw(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer_index_arg]
+    else:
+        start = spacers_matrix_arg.loc[spacer_index_arg,'stop']
+        seq47 = reverse_complement(seq_arg[start-NEIGHBOR_RIGHT-1 : start+NEIGHBOR_LEFT])
+        pbs = twinpe_rev(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer_index_arg]
+        twin_rtt_arg = reverse_complement(twin_rtt_arg)
+    if len(pbs) > PBS_SPACE: pbs = pbs[0:PBS_SPACE]
+    if len(twin_rtt_arg) > RTT_SPACE: twin_rtt_arg = twin_rtt_arg[0:RTT_SPACE]
+    score_each = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs, rtt_arg=twin_rtt_arg, scaf_arg=scaf_arg)
+    return score_each
+
+def get_DeepPE_twin(seq_arg, spacers_matrix_arg, scaf_arg, pbs_len_arg, twin_rtt_arg):
     score = []
-    def process(spacer_index_arg):
-        fwd_or_rvs = spacers_matrix_arg.loc[spacer_index_arg, 'orientation']
-        if fwd_or_rvs == 'FWD':
-            start = spacers_matrix_arg.loc[spacer_index_arg,'start']
-            seq47 = seq_arg[start-NEIGHBOR_LEFT-1 : start+NEIGHBOR_RIGHT] 
-            pbs = twinpe_forw(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer_index_arg]
-        else:
-            start = spacers_matrix_arg.loc[spacer_index_arg,'stop']
-            seq47 = reverse_complement(seq_arg[start-NEIGHBOR_RIGHT-1 : start+NEIGHBOR_LEFT])
-            pbs = twinpe_rev(seq_arg, spacers_matrix_arg, pbs_len_arg)[spacer_index_arg]
-            twin_rtt_arg = reverse_complement(twin_rtt_arg)
-        if len(pbs) > PBS_SPACE: pbs = pbs[0:PBS_SPACE]
-        if len(twin_rtt_arg) > RTT_SPACE: twin_rtt_arg = twin_rtt_arg[0:RTT_SPACE]
-        score_each = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs, rtt_arg=twin_rtt_arg, scaf_arg=scaf_arg)
-        return score_each
+    process_partial = partial(get_DeepPE_twin_process, spacers_matrix_arg=spacers_matrix_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, scaf_arg=scaf_arg, twin_rtt_arg=twin_rtt_arg)
     with confu.ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
-        futures = [executor.submit(process, spacer_index) for spacer_index in range(spacers_matrix_arg.shape[0])]
+        futures = [executor.submit(process_partial, spacer_index) for spacer_index in range(spacers_matrix_arg.shape[0])]
         for future in confu.as_completed(futures):
             score.append(future.result())
     return score

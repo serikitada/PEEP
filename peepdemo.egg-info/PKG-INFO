@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: peepdemo
+Version: 1.0.0
+Summary: Designs paired pegRNAs for deletions and evaluates efficiencies
+Home-page: git@github.com:serikitada/PEEP_demo/tree/main
+Author: Seri Kitada
+Author-email: kitada.seri.77w@st.kyoto-u.ac.jp
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
