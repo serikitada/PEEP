@@ -38,7 +38,7 @@ python base.py \
     --ref_genome <pre-processed reference genome file> \
     --design PRIME-Del \
     --outname [output file name] {fasta name + design method} \
-    --outdir [output directory] {outname + "_SoftwareName_out"} \
+    --outdir [output directory] {outname + "_PEEP_out"} \
     --start_min [minimum deletion start position] \
     --start_max [maximum deletion end position] \
     --end_min [minimum deletion end position] \
@@ -66,7 +66,7 @@ python base.py \
     --ref_genome <pre-processed reference genome file> \
     --design twinPE \
     --outname [output file name] {fasta name + design method} \
-    --outdir [output directory] {outname + "_SoftwareName_out"} \
+    --outdir [output directory] {outname + "_PEEP_out"} \
     --start_min [minimum deletion start position] \
     --start_max [maximum deletion end position] \
     --end_min [minimum deletion end position] \
@@ -88,7 +88,7 @@ python base.py \
 🔷 **<code>--fasta</code> or <code>-f</code>** : The path to the input file in FASTA format, that contains the sequence within which deletion is to be induced [(the example FASTA file)](./../example_files/sequence/MAPK1.fna).   <br>
 🔷 **<code>--ref_genome</code> or <code>-ref</code>** : The path to the reference genome file for evaluating off-target activity [(the example reference genome file and its header file)](./../example_files/ref_genome). Users can either  
 - provide their own file that needs to be pre-processed (for details, refer to [ref_genome.md](./ref_genome.md)) <br>
-- choose human genome ([hg38.p14](https://www.ncbi.nlm.nih.gov/assembly/GCA_000001405.29)) or mouse genome ([mm39](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001635.27/)) from SoftwareName's built-in library <br>
+- choose human genome ([hg38.p14](https://www.ncbi.nlm.nih.gov/assembly/GCA_000001405.29)) or mouse genome ([mm39](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001635.27/)) from PEEP's built-in library <br>
 
 🔷　**<code>--design</code> or <code>-design</code>** : The deletion method to design PBS and RTT accordingly. Should either be "PRIME-Del" or "twinPE". <br>  <br>
 **+ when <code>--design</code> is "twinPE"** <br>
@@ -187,13 +187,13 @@ python base.py \
 
 ### PRIME-Del example output
 **1. CSV file** <br />
-[Go to the CSV file](../example_files/output_base/MAPK1_PRIME-Del_example_single_SoftwareName.csv)
+[Go to the CSV file](../example_files/output_base/MAPK1_PRIME-Del_example_single_PEEP.csv)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName_res.png) 
  ...
 <br /> 
 
 **2. Log file** <br />
-[Go to the log file](../example_files/output_base/MAPK1_PRIME-Del_example_single_SoftwareName.log)
+[Go to the log file](../example_files/output_base/MAPK1_PRIME-Del_example_single_PEEP.log)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName.png)
 <br /> 
 
@@ -223,14 +223,14 @@ python base.py \
 ```
 ### twinPE example output
 **1. CSV file** <br />
-[Go to the CSV file](../example_files/output_base/MAPK1_twinPE_single_SoftwareName.csv)
+[Go to the CSV file](../example_files/output_base/MAPK1_twinPE_single_PEEP.csv)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName_res.png) 
  ...
   ❓ The link above directs to the actual output with twinPE, but the image is from the Prime-del example. The image will be updated once the example is fixed.
 <br /> 
 
 **2. Log file** <br />
-[Go to the log file](../example_files/output_base/MAPK1_twinPE_single_SoftwareName.log)
+[Go to the log file](../example_files/output_base/MAPK1_twinPE_single_PEEP.log)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName.png)
  ❓ The link above directs to the actual output with twinPE, but the image is from the Prime-del example. The image will be updated once the example is fixed.
 <br /> 
