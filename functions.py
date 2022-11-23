@@ -6,6 +6,7 @@ import logging
 import other_soft.DeepSpCas9_modified.DeepSpCas9 as DeepSpCas9
 import other_soft.DeepPE_modified.DeepPE_main as DeepPE
 from Bio.Seq import Seq
+from pandarallel import pandarallel
 import concurrent.futures as confu
 from functools import partial
   
@@ -461,6 +462,8 @@ def get_DeepSpCas9_process(spacer_index_arg, spacers_matrix_arg, seq_arg):
 
 def get_DeepSpCas9(seq_arg, spacers_matrix_arg):
     score = []
+    pair_list.parallel_apply(lambda x: get_pair_size(x['forw_list'], x['rev_list']), axis=1)
+
     with confu.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
         process_partial = partial(get_DeepSpCas9_process, spacers_matrix_arg=spacers_matrix_arg,seq_arg=seq_arg)
         for result in executor.map(process_partial, range(spacers_matrix_arg.shape[0]), chunksize=10):
@@ -658,6 +661,8 @@ def get_pair_info(forw_index_arg, rev_index_arg, rev_arg, forw_arg, design_arg, 
     ###
 
 def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,seq_arg,pbs_len_arg,scaf_arg,rtt_len_arg=None,twin_rtt_arg=None):
+    pandarallel.initialize()
+
     default_columns = ["del_start", "del_end","del_length","FWD_spacer","RVS_spacer","FWD_PBS","FWD_PBS_length","RVS_PBS","RVS_PBS_length","FWD_RTT","FWD_RTT_length","RVS_RTT","RVS_RTT_length"]
     flags_columns_raw = ["poly_T_4","SpacerGC_25_75","PBS_GC_30_60","PBS_RTT_GCrich"]
     flags_columns = []
@@ -665,7 +670,7 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         flags_columns.append(str("FWD_"+flag))
         flags_columns.append(str("RVS_"+flag))
     correspond = {"DeepPE":"DeepPE","DeepSpCas9":"DeepSpCas9","CRISPRscan":"Moreno2015","RuleSet1":"Doench2014OnTarget","CFDscore":"DoenchCFD_specificityscore","MITscore":"Hsu2013","mismatch_hit":"0-1-2-3-4_mismatch"}
-    ###
+    
     metrics_columns_raw = metrics_all_arg
     metrics_columns = []
     metrics_ = []
@@ -673,7 +678,7 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         metrics_columns.append(str("FWD_"+metric))
         metrics_columns.append(str("RVS_"+ metric))
         metrics_.append(correspond.get(metric))
-    ###
+    
     column_names = default_columns + metrics_columns + flags_columns 
 
     if design_arg == "PRIME-Del":
@@ -685,22 +690,22 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
     if design_arg == "twinPE":
         forw_rtt = twin_rtt_arg
         rev_rtt = reverse_complement(twin_rtt_arg)
-    ###
+    
     forw_list = list(np.repeat(range(forw_arg.shape[0]),rev_arg.shape[0]))
     rev_list = list(range(rev_arg.shape[0]))*forw_arg.shape[0]
     pair_list = pd.DataFrame(list(zip(forw_list, rev_list)), columns =['forw_list', 'rev_list'])
     def get_pair_size(forw_index_arg, rev_index_arg):
         size = int(rev_arg.loc[rev_index_arg, 'del_end']) -  int(forw_arg.loc[forw_index_arg, 'del_start']) + 1
         return size
-    pair_list['size_list'] = pair_list.apply(lambda x: get_pair_size(x['forw_list'], x['rev_list']), axis=1)
+    pair_list['size_list'] = pair_list.parallel_apply(lambda x: get_pair_size(x['forw_list'], x['rev_list']), axis=1)
     pair_bool = (pair_list.loc[:,'size_list'] <= lmax_arg ) & (pair_list.loc[:,'size_list'] >= lmin_arg).values.tolist()
     pair_list_refined = pair_list.drop(np.where(pair_bool==False)[0].tolist(), axis=0, inplace=False)
     pair_list_refined = pair_list_refined.reset_index(drop=True)
-    ###
+    
     if design_arg == "PRIME-Del":
-        pair = pd.DataFrame(pair_list_refined.apply(lambda x: get_pair_info(x['forw_list'], x['rev_list'],rev_arg=rev_arg, forw_arg=forw_arg, design_arg=design_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, metrics_all_arg=metrics_all_arg,scaf_arg=scaf_arg, metrics_=metrics_, rtt_len_arg=rtt_len_arg), axis=1).to_list(), columns = column_names)
+        pair = pd.DataFrame(pair_list_refined.parallel_apply(lambda x: get_pair_info(x['forw_list'], x['rev_list'],rev_arg=rev_arg, forw_arg=forw_arg, design_arg=design_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, metrics_all_arg=metrics_all_arg,scaf_arg=scaf_arg, metrics_=metrics_, rtt_len_arg=rtt_len_arg), axis=1).to_list(), columns = column_names)
     if design_arg == "twinPE":
-        pair = pd.DataFrame(pair_list_refined.apply(lambda x: get_pair_info(x['forw_list'], x['rev_list'],rev_arg=rev_arg, forw_arg=forw_arg, design_arg=design_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, metrics_all_arg=metrics_all_arg,scaf_arg=scaf_arg, metrics_=metrics_,forw_rtt_arg=forw_rtt,rev_rtt_arg=rev_rtt), axis=1).to_list(), columns = column_names)
+        pair = pd.DataFrame(pair_list_refined.parallel_apply(lambda x: get_pair_info(x['forw_list'], x['rev_list'],rev_arg=rev_arg, forw_arg=forw_arg, design_arg=design_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, metrics_all_arg=metrics_all_arg,scaf_arg=scaf_arg, metrics_=metrics_,forw_rtt_arg=forw_rtt,rev_rtt_arg=rev_rtt), axis=1).to_list(), columns = column_names)
     return pair
 
 ##################OPTIMIZATION##################
