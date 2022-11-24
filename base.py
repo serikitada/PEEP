@@ -1,9 +1,10 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import functions as fun
 import argparse
 import pandas as pd
 import json
+
+import functions as fun
 
 def main():
     spacer_len = 20
@@ -97,7 +98,7 @@ def main():
     flashfry_input = fun.pair_narrowed_fasta(sminr, smaxr, emaxr, eminr, seq, fork_value, tmp_outdir, outelement)
 
     #flashfry discover module, finding potential spacers and off-target sites------------------------
-    logger.info("Searching for forward and reverse spacers and potential off-target sites...")
+    logger.info("Searching for forward and reverse spacers and potential off-target sites with FlashFry...")
     if len(flashfry_input) == 1:
         flashfry_output = [fun.flashfry_discover(flashfry_input[0], ref)]
         res_forw = pd.read_csv(flashfry_output[0], sep="\t")  
@@ -120,9 +121,9 @@ def main():
 
     #score forward/reverse spacers------------------------
     logger.info("Scoring forward spacers...")
-    forw_scored = fun.score_each(seq, forw_spacers_path_woex,ref,metrics_all, scaf, pbs_len, design, gap, sminr,  rtt_len,twin_rtt)
+    forw_scored = fun.score_each(seq, forw_spacers_path_woex, ref, metrics_all, scaf, pbs_len, design, gap, sminr,  rtt_len,twin_rtt)
     logger.info("Scoring reverse spacers...")
-    rev_scored = fun.score_each(seq, rev_spacers_path_woex,ref,metrics_all, scaf, pbs_len, design, gap, eminr, rtt_len,twin_rtt)
+    rev_scored = fun.score_each(seq, rev_spacers_path_woex, ref, metrics_all, scaf, pbs_len, design, gap, eminr, rtt_len,twin_rtt)
 
     #filters bad spacers------------------------
     logger.info("Filtering out forward spacers based on metrics and thresholds...")

@@ -3,12 +3,11 @@ import subprocess
 import pandas as pd
 import numpy as np
 import logging
-import other_soft.DeepSpCas9_modified.DeepSpCas9 as DeepSpCas9
-import other_soft.DeepPE_modified.DeepPE_main as DeepPE
 from Bio.Seq import Seq
 from pandarallel import pandarallel
-import concurrent.futures as confu
-from functools import partial
+
+import other_soft.DeepSpCas9_modified.DeepSpCas9 as DeepSpCas9
+import other_soft.DeepPE_modified.DeepPE_main as DeepPE
   
 def import_tensorflow():
     # Filter tensorflow version warnings
@@ -461,13 +460,10 @@ def get_DeepSpCas9_process(spacer_index_arg, spacers_matrix_arg, seq_arg):
     return score_each
 
 def get_DeepSpCas9(seq_arg, spacers_matrix_arg):
+    pandarallel.initialize(verbose=0)
     score = []
-    pair_list.parallel_apply(lambda x: get_pair_size(x['forw_list'], x['rev_list']), axis=1)
-
-    with confu.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
-        process_partial = partial(get_DeepSpCas9_process, spacers_matrix_arg=spacers_matrix_arg,seq_arg=seq_arg)
-        for result in executor.map(process_partial, range(spacers_matrix_arg.shape[0]), chunksize=10):
-            score.append(result)
+    indices = pd.Series(range(spacers_matrix_arg.shape[0]))
+    score = indices.parallel_apply(lambda x: get_DeepSpCas9_process(x, spacers_matrix_arg=spacers_matrix_arg, seq_arg=seq_arg))
     return score
 
 def get_DeepPE_twin_process(spacer_index_arg, spacers_matrix_arg, seq_arg, pbs_len_arg, scaf_arg, twin_rtt_arg):
@@ -491,15 +487,13 @@ def get_DeepPE_twin_process(spacer_index_arg, spacers_matrix_arg, seq_arg, pbs_l
     return score_each
 
 def get_DeepPE_twin(seq_arg, spacers_matrix_arg, scaf_arg, pbs_len_arg, twin_rtt_arg):
+    pandarallel.initialize(verbose=0)
     score = []
-    process_partial = partial(get_DeepPE_twin_process, spacers_matrix_arg=spacers_matrix_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, scaf_arg=scaf_arg, twin_rtt_arg=twin_rtt_arg)
-    with confu.ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
-        futures = [executor.submit(process_partial, spacer_index) for spacer_index in range(spacers_matrix_arg.shape[0])]
-        for future in confu.as_completed(futures):
-            score.append(future.result())
+    indices = pd.Series(range(spacers_matrix_arg.shape[0]))
+    score = indices.parallel_apply(lambda x: get_DeepPE_twin_process(x, spacers_matrix_arg=spacers_matrix_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, scaf_arg=scaf_arg, twin_rtt_arg=twin_rtt_arg))
     return score
 
-def get_DeepPE_primedel_each(seq_arg, spacer_vector_arg,pbs_arg, rtt_arg, scaf_arg):
+def get_DeepPE_primedel_each(seq_arg, spacer_vector_arg, pbs_arg, rtt_arg, scaf_arg):
     NEIGHBOR_LEFT = 4
     NEIGHBOR_RIGHT = 42
     PBS_SPACE = 21
@@ -516,7 +510,7 @@ def get_DeepPE_primedel_each(seq_arg, spacer_vector_arg,pbs_arg, rtt_arg, scaf_a
     score = DeepPE.main(seq47_arg=seq47, pbs_arg=pbs_arg, rtt_arg=rtt_arg, scaf_arg=scaf_arg)
     return score
 
-def score_each(seq_arg, spacers_path_woex_arg,ref_arg,metrics_arg, scaf_arg, pbs_len_arg, design_arg, gap_arg, wminr_arg, rtt_len_arg=None,twin_rtt_arg = None):
+def score_each(seq_arg, spacers_path_woex_arg, ref_arg, metrics_arg, scaf_arg, pbs_len_arg, design_arg, gap_arg, wminr_arg, rtt_len_arg=None,twin_rtt_arg = None):
     flashfry_metrics = "minot"
     if ("CRISPRscan" in metrics_arg): flashfry_metrics += ",moreno2015"
     if ("RuleSet1" in metrics_arg): flashfry_metrics += ",doench2014ontarget"
@@ -538,6 +532,8 @@ def score_each(seq_arg, spacers_path_woex_arg,ref_arg,metrics_arg, scaf_arg, pbs
         if ("DeepPE" in metrics_arg):
             if design_arg == 'twinPE':
                 scored['DeepPE'] = get_DeepPE_twin(seq_arg, scored, scaf_arg, pbs_len_arg, twin_rtt_arg)
+    else: 
+        raise Exception("FlashFry overflowed. For details, please refer to: https://github.com/mckennalab/FlashFry/wiki/Discovery-options")
     return scored
 
 def filter(scored_spacers_matrix_arg, filterby_arg):
@@ -658,10 +654,9 @@ def get_pair_info(forw_index_arg, rev_index_arg, rev_arg, forw_arg, design_arg, 
     pbs_rtt_GCrich_flag(rev_pbs, rev_rtt)]
     pair_info = default_part + metrics_part + flags_part
     return pair_info
-    ###
 
 def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,seq_arg,pbs_len_arg,scaf_arg,rtt_len_arg=None,twin_rtt_arg=None):
-    pandarallel.initialize()
+    pandarallel.initialize(verbose=0)
 
     default_columns = ["del_start", "del_end","del_length","FWD_spacer","RVS_spacer","FWD_PBS","FWD_PBS_length","RVS_PBS","RVS_PBS_length","FWD_RTT","FWD_RTT_length","RVS_RTT","RVS_RTT_length"]
     flags_columns_raw = ["poly_T_4","SpacerGC_25_75","PBS_GC_30_60","PBS_RTT_GCrich"]
@@ -708,21 +703,6 @@ def make_pair(forw_arg, rev_arg, metrics_all_arg,design_arg,lmin_arg,lmax_arg,se
         pair = pd.DataFrame(pair_list_refined.parallel_apply(lambda x: get_pair_info(x['forw_list'], x['rev_list'],rev_arg=rev_arg, forw_arg=forw_arg, design_arg=design_arg, seq_arg=seq_arg, pbs_len_arg=pbs_len_arg, metrics_all_arg=metrics_all_arg,scaf_arg=scaf_arg, metrics_=metrics_,forw_rtt_arg=forw_rtt,rev_rtt_arg=rev_rtt), axis=1).to_list(), columns = column_names)
     return pair
 
-##################OPTIMIZATION##################
-
-#fasta = read_fasta("example_files/sequence/MAPK1.fna")
-#seq, seql = get_seq_len(fasta, 20*2)
-#design = "PRIME-Del"
-#metrics_output, filterby, rankby_each, rankby_pair, metrics_all = validate_metrics("DeepPE DeepSpCas9 CFDscore MITscore mismatch_hit",[["mismatch_hit",0,2],["MITscore",50],["CFDscore",0.8]],"DeepSpCas9 CFDscore", [["DeepPE","product"],["CFDscore","sum"]])
-#forw = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_forw_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",")  
-#rev = pd.read_csv("~/Downloads/Sanger/01.Project/gitrepos/my_repositories/FlashFry/example_files/output_base/opt_rev_MAPK1_PRIME-Del_example_single_SoftwareName.csv", sep=",") 
-#lmin = 23500
-#lmax = 26500
-
-#make_pair(forw, rev, ["DeepPE","DeepSpCas9","CFDscore","MITscore","mismatch_hit"],design,23500,26500,seq,11,"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc",rtt_len_arg=11,twin_rtt_arg=30)
-
-
-
 def rank_pair(passed_pairs_matrix_arg, rankby_pair_arg):
     DEF_COLUMN_NUM = 13 # the number of default columns in make_pair() function above
     passed = passed_pairs_matrix_arg
@@ -755,5 +735,3 @@ def read_extend_input(input_path_arg):
     for i in np.where(np.isnan(error_list))[0].tolist():
         error_list[i] = round(len_list[i]*0.05)
     return query_names, len_list, error_list
-
-#def compare_extend_sets(set_names_arg, outelement_arg, pair_rankby_arg):
