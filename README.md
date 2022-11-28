@@ -96,19 +96,22 @@ McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRI
 https://github.com/mckennalab/FlashFry <br />
 </ul>
 
-Evaluation of **DeepPE** scores are enabled thanks to codes and parameters provided by the following paper. 
+Evaluation of **DeepSpCas9** and **DeepPE** scores are enabled thanks to codes and parameters provided by the following paper. 
 <ul>
 Kim, H.K., Yu, G., Park, J. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat Biotechnol 39, 198–206 (2021). https://doi.org/10.1038/s41587-020-0677-y <br />
+</ul>
+<ul>
+Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019) https://www.science.org/doi/10.1126/sciadv.aax9249 <br />
 </ul>
 
 We sincerely thank every other software and its creators we depend on to run PEEP.
 
 # References
-**Supported deletion/insertion methods that use paired pegRNAs**
-PRIME-Del
-  Choi, J. et al. Precise genomic deletions using paired prime editing. Nat. Biotechnol. 40, 218–226 (2022). <br />
-TwinPE
-  Anzalone, A. V. et al. Programmable deletion, replacement, integration and inversion of large DNA sequences with twin prime editing. Nat. Biotechnol. 40, 731–740 (2021). <br />
+**Supported deletion/insertion methods that use paired pegRNAs** <br />
+PRIME-Del <br />
+Choi, J. et al. Precise genomic deletions using paired prime editing. Nat. Biotechnol. 40, 218–226 (2022). <br />
+TwinPE <br />
+Anzalone, A. V. et al. Programmable deletion, replacement, integration and inversion of large DNA sequences with twin prime editing. Nat. Biotechnol. 40, 731–740 (2021). <br />
 3.	Kim, H. K. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat. Biotechnol. 39, 198–206 (2021). <br />
 4.	Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019). <br />
 5.	Moreno-Mateos, M. A. et al. CRISPRscan: designing highly efficient sgRNAs for CRISPR-Cas9 targeting in vivo. Nat. Methods 12, 982–988 (2015). <br />
