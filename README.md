@@ -93,7 +93,7 @@ conda install -c bioconda viennarna=2.4.18
 PEEP owes much of its functionality to the amazing software **FlashFry** created by Dr.Aaron McKenna and members in the Shendure lab. 
 <ul>
 McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018). https://doi.org/10.1186/s12915-018-0545-0 <br />
-https://github.com/mckennalab/FlashFry <br />
+Available at: https://github.com/mckennalab/FlashFry <br />
 </ul>
 
 Evaluation of **DeepSpCas9** and **DeepPE** scores are enabled thanks to codes and parameters provided by the following papers. 
