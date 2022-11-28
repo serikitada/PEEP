@@ -108,28 +108,29 @@ We sincerely thank every other software and its creators we depend on to run PEE
 
 # References
 **Work that provide software and codes used (copied and modified) in PEEP** <br />
-FlashFry: <br />
+**FlashFry**: <br />
 McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018) <br />
-DeepPE: <br />
+**DeepPE**: <br />
 Kim, H.K., Yu, G., Park, J. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat Biotechnol 39, 198–206 (2021) <br />
-DeepSpCas9: Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019) <br />
+**DeepSpCas9**: <br />
+Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019) <br />
 
 **Supported deletion/insertion methods that use paired pegRNAs** <br />
-PRIME-Del : <br />
+**PRIME-Del** : <br />
 Choi, J. et al. Precise genomic deletions using paired prime editing. Nat. Biotechnol. 40, 218–226 (2022). <br />
-TwinPE : <br />
+**TwinPE** : <br />
 Anzalone, A. V. et al. Programmable deletion, replacement, integration and inversion of large DNA sequences with twin prime editing. Nat. Biotechnol. 40, 731–740 (2021). <br />
 
 **Evaluation metrics used in PEEP** <br />
-DeepPE: <br />
+**DeepPE** : <br />
 Kim, H. K. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat. Biotechnol. 39, 198–206 (2021). <br />
-DeepSpCas9: <br />
+**DeepSpCas9** : <br />
 Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019). <br />
-CRISPEscan: <br />
+**CRISPEscan** : <br />
 Moreno-Mateos, M. A. et al. CRISPRscan: designing highly efficient sgRNAs for CRISPR-Cas9 targeting in vivo. Nat. Methods 12, 982–988 (2015). <br />
-RuleSet1: <br />
+**RuleSet1** : <br />
 Doench, J. G. et al. Rational design of highly active sgRNAs for CRISPR-Cas9-mediated gene inactivation. Nat. Biotechnol. 32, 1262–1267 (2014). <br />
-CFD score: <br />
+**CFD score** : <br />
 Doench, J. G. et al. Optimized sgRNA design to maximize activity and minimize off-target effects of CRISPR-Cas9. Nat. Biotechnol. 34, 184–191 (2016). <br />
-MIT Specificity score (a.k.a Hsu guide score): <br />
+**MIT Specificity score** (a.k.a Hsu guide score): <br />
 Hsu, P. D. et al. DNA targeting specificity of RNA-guided Cas9 nucleases. Nat. Biotechnol. 31, 827–832 (2013). <br />
