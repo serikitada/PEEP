@@ -107,7 +107,7 @@ Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-base
 We sincerely thank every other software and its creators we depend on to run PEEP.
 
 # References
-**Work that provide software and codes used (copied and modified) in PEEP**
+**Work that provide software and codes used (copied and modified) in PEEP** <br />
 FlashFry: <br />
 McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018) <br />
 DeepPE: <br />
