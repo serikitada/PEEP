@@ -24,10 +24,10 @@
 
 # Introduction <br />
 
-**PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions. 
-It suggests pairs of spacers with high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
+**PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions up to 10kbp with the option to insert short (-100bp) arbitrary sequences. 
+It suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
-🧬Currently, **supported deletion methods** are as follows.
+🧬Currently, **supported deletion/insertion methods** are as follows.
 1. [**PRIME-Del** (Junhong Choi et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01025-z)
 2. [**twinPE** (Andrew V. Anzalone et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01133-w)
 <!-- 3. [**GRAND** (Jinlin Wang et al., _Nature Methods_, 2022)](https://www.nature.com/articles/s41592-022-01399-1) --> <br />
@@ -81,28 +81,37 @@ Please [install conda](https://docs.conda.io/projects/conda/en/latest/user-guide
 conda create --name PEEP python=3.8
 conda activate PEEP
 
-#for any module
 conda install numpy=1.22.3
 conda install pandas=1.4.1
-
-#for DeepPE metric
+conda install -c conda-forge pandarallel=1.6.3
 conda install -c conda-forge tensorflow=2.4.1
 conda install -c conda-forge biopython=1.74
 conda install -c bioconda viennarna=2.4.18
 ```
 
-# References
-
 # Acknowledgements
-PEEP owes much of its functionality to the amazing software FlashFry created by Dr.Aaron McKenna and members in the Shendure lab. 
+PEEP owes much of its functionality to the amazing software **FlashFry** created by Dr.Aaron McKenna and members in the Shendure lab. 
 <ul>
 McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018). https://doi.org/10.1186/s12915-018-0545-0 <br />
 https://github.com/mckennalab/FlashFry <br />
 </ul>
 
-Evaluation of DeepSpCas9 and DeepPE scores are enabled thanks to codes and parameters provided by the following paper. 
+Evaluation of **DeepPE** scores are enabled thanks to codes and parameters provided by the following paper. 
 <ul>
 Kim, H.K., Yu, G., Park, J. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat Biotechnol 39, 198–206 (2021). https://doi.org/10.1038/s41587-020-0677-y <br />
 </ul>
 
 We sincerely thank every other software and its creators we depend on to run PEEP.
+
+# References
+**Supported deletion/insertion methods that use paired pegRNAs**
+PRIME-Del
+  Choi, J. et al. Precise genomic deletions using paired prime editing. Nat. Biotechnol. 40, 218–226 (2022). <br />
+TwinPE
+  Anzalone, A. V. et al. Programmable deletion, replacement, integration and inversion of large DNA sequences with twin prime editing. Nat. Biotechnol. 40, 731–740 (2021). <br />
+3.	Kim, H. K. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat. Biotechnol. 39, 198–206 (2021). <br />
+4.	Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019). <br />
+5.	Moreno-Mateos, M. A. et al. CRISPRscan: designing highly efficient sgRNAs for CRISPR-Cas9 targeting in vivo. Nat. Methods 12, 982–988 (2015). <br />
+6.	Doench, J. G. et al. Rational design of highly active sgRNAs for CRISPR-Cas9-mediated gene inactivation. Nat. Biotechnol. 32, 1262–1267 (2014). <br />
+7.	Doench, J. G. et al. Optimized sgRNA design to maximize activity and minimize off-target effects of CRISPR-Cas9. Nat. Biotechnol. 34, 184–191 (2016). <br />
+8.	Hsu, P. D. et al. DNA targeting specificity of RNA-guided Cas9 nucleases. Nat. Biotechnol. 31, 827–832 (2013). <br />
