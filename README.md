@@ -24,7 +24,7 @@
 
 # Introduction <br />
 
-**PEEP** is a pipeline for designing plausibly efficient **_pairs_ of pegRNAs** for deletions up to 10kbp with the option to insert short (-100bp) arbitrary sequences. 
+**PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for deletions up to 10kbp, with the option to insert short (-100bp) arbitrary sequences. 
 It suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
 **Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences (~10kb) with an arbitrary (~100b) insertion. <br />
