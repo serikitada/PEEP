@@ -24,10 +24,10 @@
 
 # Introduction <br />
 
-**PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for deletions up to 10kbp, with the option to insert short (-100bp) arbitrary sequences. 
+**PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for deletions up to 10kbp, with the option to insert short (~100bp) arbitrary sequences. 
 It suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
-**Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences (~10kb) with an arbitrary (~100b) insertion. <br />
+**Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences up to 10kbp with an arbitrary insertion up to 100bp. <br />
 What can you do with short to large deletion with the ability to insert short arbitrary sequences? There is a wide variety of possible applications: gene knockout with the reading frame preserved, gene replacement with programmed mutations, integration of a recombinase target site... etc. <br />
 But **why use paired pegRNAs**? Firstly, **a single pegRNA** enables CRISPR- and reverse transcriptase-based precise gene editing by encoding the target site and the desired edit, without causing double strand breaks. Though revolutionary, it is not highly efficient for large deletions (80b~) and insertions (40b~) [(Anzalone et al, 2019)](https://www.nature.com/articles/s41586-019-1711-4). <br />
 **Paired pegRNAs**, however, enable larger (~100kb) deletion with insertion of desired (~100b) sequences, expanding the scope of potential applications. Such methods include PRIME-Del [(Choi et al, 2021)](https://www.nature.com/articles/s41587-021-01025-z) and twinPE [(Anzalone et al, 2021)](https://www.nature.com/articles/s41587-021-01133-w). <br />
