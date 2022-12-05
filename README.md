@@ -48,8 +48,8 @@
 **Other biological metrics**
 1. polyT (4 or more consecutive Ts) within spacers
 2. GC contents of spacers, PBSs, and RTTs
-3. (Melting temperatures) #would be omitted before publicising
-4. (RNA minimum free energy) #would be omitted before publicising
+3. Melting temperatures
+4. RNA minimum free energy
 
  <br />
 
