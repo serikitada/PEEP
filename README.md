@@ -25,7 +25,7 @@
 # Introduction <br />
 
 **Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences up to 10kbp with the option to insert arbitrary sequences of up to 100bp. <br />
-**PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for such deletions and insertiosn. It suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
+**PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for such deletions and insertions. It suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
 🧬Currently, **supported deletion/insertion methods** are as follows.
 1. [**PRIME-Del** (Junhong Choi et al., _Nature Biotechnology_, 2021)](https://www.nature.com/articles/s41587-021-01025-z)
