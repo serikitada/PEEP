@@ -53,7 +53,6 @@ python base.py \
     --rtt_len [RTT length] {30} \
     --scaffold [Scaffold for PE2] {"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc"}
 ```
-❓How to show default behavious
 
 ## 2.twinPE usage
 Arguments followed by <code><></code> below indicate that they are required. <br>
@@ -81,7 +80,6 @@ python base.py \
     --twinPE_rtt [RTT sequence] {None} \
     --scaffold [Scaffold for PE2] {"gttttagagctagaaatagcaagttaaaataaggctagtccgttatcaacttgaaaaagtggcaccgagtcggtgc"}
 ```
-❓How to show default behavious <br>
 
 ## Arguments
 ## Required arguments 
@@ -226,13 +224,11 @@ python base.py \
 [Go to the CSV file](../example_files/output_base/MAPK1_twinPE_single_PEEP.csv)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName_res.png) 
  ...
-  ❓ The link above directs to the actual output with twinPE, but the image is from the Prime-del example. The image will be updated once the example is fixed.
 <br /> 
 
 **2. Log file** <br />
 [Go to the log file](../example_files/output_base/MAPK1_twinPE_single_PEEP.log)
  ![image](../images/MAPK1_PRIME-Del_example_single_SoftwareName.png)
- ❓ The link above directs to the actual output with twinPE, but the image is from the Prime-del example. The image will be updated once the example is fixed.
 <br /> 
 
-❓ Explain flags in the output but where?
+
