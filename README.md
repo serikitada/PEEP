@@ -113,13 +113,15 @@ Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-base
 We sincerely thank every other software and its creators we depend on to run PEEP.
 
 # References
-**_Work that provide software and codes used (copied and modified) in PEEP_** <br />
+**Work that provide software and codes used (copied and modified) in PEEP** <br />
+<ul>
 **FlashFry**: <br />
 McKenna, A., Shendure, J. FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol 16, 74 (2018) <br />
 **DeepPE**: <br />
 Kim, H.K., Yu, G., Park, J. et al. Predicting the efficiency of prime editing guide RNAs in human cells. Nat Biotechnol 39, 198–206 (2021) <br />
 **DeepSpCas9**: <br />
 Kim, H. K. et al. SpCas9 activity prediction by DeepSpCas9, a deep learning-based model with high generalization performance. Sci Adv 5, eaax9249 (2019) <br />
+</ul>
 
 **_Supported deletion/insertion methods that use paired pegRNAs_** <br />
 **PRIME-Del** : <br />
