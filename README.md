@@ -26,7 +26,7 @@
 
 🚨There is a Python API of PEEP and a **web interface** currently under development in collaboration with [Elixir Estonia](https://elixir.ut.ee/). Please wait for further annoucement. 🚨
 
-**Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences up to 10kbp with the option to insert arbitrary sequences of up to 100bp [(Jump to the details)](<a href="#single-deletion-mode>). <br />
+**Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences up to 10kbp with the option to insert arbitrary sequences of up to 100bp [(Jump to the details)](<a href="#single-deletion-mode">). <br />
 **PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for such deletions and insertions. Based on your **1) FASTA file** that contains the deletion/insertion target site, **2) reference genome**, and **3) arguments**, it suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
 🧬Currently, **supported deletion/insertion methods** are as follows.
