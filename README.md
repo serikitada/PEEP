@@ -87,7 +87,7 @@ Next, please download the package: <br />
 ```
 git clone https://github.com/serikitada/PEEP
 ```
-<br />
+
 We recommend that you create a conda environment specifically for running PEEP to control versions of packages PEEP depends on.
 Please [install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html), which is a package, dependency, and environment manager, if you have not done so.
 ```
