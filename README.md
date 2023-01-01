@@ -80,8 +80,6 @@ For the detailed process and usage, please refere to the documentation for **[Si
 
 # Installation guide <br />
 
-**Environmental requirements**
-
 Please [install Java](https://java.com/en/download/help/index_installing.html) if you have not done so.
 
 Next, please download the package: <br />
