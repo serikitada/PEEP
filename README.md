@@ -26,7 +26,7 @@
 
 🚨There is a Python API of PEEP and a **web interface** currently under development in collaboration with [Elixir Estonia](https://elixir.ut.ee/). Please wait for further annoucement. 🚨
 
-**Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences up to 10kbp with the option to insert arbitrary sequences of up to 100bp. <br />
+**Pairs of prime editing (PE) guide RNAs (pegRNAs)** can be used to precisely delete DNA sequences up to 10kbp with the option to insert arbitrary sequences of up to 100bp [(Jump to the details)](<li><a href="###Single deletion mode>). <br />
 **PEEP** is a pipeline for designing expectedly efficient **_pairs_ of pegRNAs** for such deletions and insertions. Based on your **1) FASTA file** that contains the deletion/insertion target site, **2) reference genome**, and **3) arguments**, it suggests pairs of spacers that are likely to have high on-target activities and low off-target activities based on known scoring methods, designing pegRNA sequences that meet user-defined biological criteria. 
 
 🧬Currently, **supported deletion/insertion methods** are as follows.
@@ -74,7 +74,8 @@ But why use paired pegRNAs? Firstly, **a single pegRNA** enables CRISPR- and rev
 **Paired pegRNAs**, however, enable larger (~100kb) deletion with insertion of desired (~100b) sequences, expanding the scope of potential applications. Such methods include PRIME-Del [(Choi et al, 2021)](https://www.nature.com/articles/s41587-021-01025-z) and twinPE [(Anzalone et al, 2021)](https://www.nature.com/articles/s41587-021-01133-w). <br />
 
 **But there is a catch**: designing pairs of pegRNAs for desired deletions and insertions requires a series of cumbersome steps, including 1)looking for possible spacers in the desired deletion start site and end site, 2) assessing on- and off-target activities across the entire genome involved, using various methods, 3) choosing good spacers within deletion start and end sites, 4) making pairs of spacers and see if the expected deletion and insertion is desirable, 5) designing PBS (primer binding site) and RTT (reverse transcription template), 6) and finally assessing on- and off-target activities of pairs and choose the most promising ones. <br />
-You can circumvent all these steps by one-step execution of **PEEP**. <br />
+You can circumvent all these steps by one-step execution of **PEEP**. <br /> 
+For the detailed process and usage, please refere to the documentation for **[Single deletion mode](./markdowns/base.md)**.
 
 
 # Installation guide <br />
